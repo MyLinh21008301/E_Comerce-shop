@@ -1,22 +1,30 @@
 "use client";
-import { useRouter } from 'next/navigation';
 
-export default function LoginPage() {
-  const router = useRouter();
-
+export default function RegisterPage() {
   return (
     <div className="flex flex-col md:flex-row h-screen">
       <div className="w-full md:w-1/2 bg-gray-100 flex flex-col justify-center items-center p-8">
-        <h1 className="text-4xl font-bold mb-8 text-gray-800">Shopee New</h1>
+        <h1 className="text-4xl font-bold mb-8 text-gray-800">Đăng Ký Tài Khoản</h1>
         <form className="w-full max-w-lg">
           <div className="mb-6">
-            <label htmlFor="username" className="block text-lg font-medium text-gray-700">
-              Tên đăng nhập
+            <label htmlFor="fullname" className="block text-lg font-medium text-gray-700">
+              Họ và Tên
             </label>
             <input
-              id="username"
+              id="fullname"
               type="text"
-              placeholder="Nhập tên đăng nhập"
+              placeholder="Nhập họ và tên"
+              className="mt-3 p-4 w-full border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black text-lg"
+            />
+          </div>
+          <div className="mb-6">
+            <label htmlFor="email" className="block text-lg font-medium text-gray-700">
+              Email
+            </label>
+            <input
+              id="email"
+              type="email"
+              placeholder="Nhập email"
               className="mt-3 p-4 w-full border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black text-lg"
             />
           </div>
@@ -31,22 +39,23 @@ export default function LoginPage() {
               className="mt-3 p-4 w-full border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black text-lg"
             />
           </div>
-          <div className="text-right mb-4">
-            <a href="#" className="text-base text-blue-600 hover:underline">Quên mật khẩu?</a>
+          <div className="mb-6">
+            <label htmlFor="confirm-password" className="block text-lg font-medium text-gray-700">
+              Xác nhận Mật khẩu
+            </label>
+            <input
+              id="confirm-password"
+              type="password"
+              placeholder="Nhập lại mật khẩu"
+              className="mt-3 p-4 w-full border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black text-lg"
+            />
           </div>
           <div className="flex justify-between items-center gap-4">
-            <button
-              type="button"
-              onClick={() => router.push('/register')} // Chuyển hướng tới trang Đăng ký
-              className="w-full p-5 bg-gray-300 text-lg rounded-lg text-gray-800 hover:bg-gray-400"
-            >
-              Đăng ký
-            </button>
             <button
               type="submit"
               className="w-full p-5 bg-blue-500 text-white text-lg rounded-lg hover:bg-blue-600"
             >
-              Đăng nhập
+              Đăng Ký
             </button>
           </div>
         </form>
