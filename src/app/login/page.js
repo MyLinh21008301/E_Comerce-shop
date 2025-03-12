@@ -3,17 +3,18 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
-  const router = useRouter(); // Sử dụng để chuyển hướng
   const [username, setUsername] = useState(""); // Lưu tên đăng nhập
   const [password, setPassword] = useState(""); // Lưu mật khẩu
   const [error, setError] = useState(""); // Hiển thị thông báo lỗi
+  const router = useRouter(); // Correctly use the useRouter hook
 
   const handleLogin = (e) => {
     e.preventDefault(); // Ngăn tải lại trang
 
     // Kiểm tra thông tin đăng nhập DEMO
     if (username === "admin" && password === "123") {
-      router.push("/home"); // Chuyển hướng sang Home
+      alert("Đăng nhập thành công!");
+      router.push("/register/home"); // Chuyển hướng sang Home
     } else {
       setError("Tên đăng nhập hoặc mật khẩu không chính xác!");
     }
