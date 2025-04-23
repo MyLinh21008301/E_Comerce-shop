@@ -5,8 +5,10 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import Image from 'next/image';
 import Link from 'next/link';
 import { getProducts } from '@/data/mockData';
+import { useAuth } from '@/context/AuthContext';
 
 export default function HomePage() {
+  const { user, logout } = useAuth();
   const [products, setProducts] = useState([]);
   const [hasMore, setHasMore] = useState(true);
   const [page, setPage] = useState(1);
@@ -48,7 +50,10 @@ export default function HomePage() {
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-center text-white text-sm py-1">
             <div className="flex gap-4">
-              <a href="#" className="hover:opacity-80">Kênh Người Bán</a>
+              <Link href="/dashboard" className="hover:opacity-80">Kênh Người Bán</Link>
+              <Link href="/dashboard" className="bg-white text-[#f53d2d] px-3 py-1 rounded hover:opacity-90">
+                Dashboard
+              </Link>
               <a href="#" className="hover:opacity-80">Tải ứng dụng</a>
               <a href="#" className="hover:opacity-80">Kết nối</a>
               <div className="flex items-center gap-2">
@@ -66,11 +71,23 @@ export default function HomePage() {
                 Hỗ Trợ
               </a>
               <a href="#" className="hover:opacity-80">Tiếng Việt</a>
-              <div className="flex items-center gap-2">
-                <a href="#" className="hover:opacity-80">Đăng Ký</a>
-                <span>|</span>
-                <a href="#" className="hover:opacity-80">Đăng Nhập</a>
-              </div>
+              {user ? (
+                <div className="flex items-center gap-2">
+                  <span className="hover:opacity-80">{user.name}</span>
+                  <button 
+                    onClick={logout}
+                    className="hover:opacity-80"
+                  >
+                    Đăng xuất
+                  </button>
+                </div>
+              ) : (
+                <div className="flex items-center gap-2">
+                  <Link href="/register" className="hover:opacity-80">Đăng Ký</Link>
+                  <span>|</span>
+                  <Link href="/login" className="hover:opacity-80">Đăng Nhập</Link>
+                </div>
+              )}
             </div>
           </div>
         </div>

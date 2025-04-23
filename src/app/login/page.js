@@ -1,22 +1,31 @@
 "use client";
+
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useAuth } from '@/context/AuthContext';
 
-export default function LoginPage() {
-  const [username, setUsername] = useState(""); // Lưu tên đăng nhập
-  const [password, setPassword] = useState(""); // Lưu mật khẩu
-  const [error, setError] = useState(""); // Hiển thị thông báo lỗi
-  const router = useRouter(); // Correctly use the useRouter hook
+export default function Login() {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const router = useRouter();
+  const { login } = useAuth();
 
-  const handleLogin = (e) => {
-    e.preventDefault(); // Ngăn tải lại trang
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setError("");
 
-    // Kiểm tra thông tin đăng nhập DEMO
+    // Giả lập kiểm tra đăng nhập
     if (username === "admin" && password === "123") {
-      alert("Đăng nhập thành công!");
-      router.push("/register/home"); // Chuyển hướng sang Home
+      // Đăng nhập thành công
+      login({
+        username: username,
+        name: "Admin User",
+        role: "admin"
+      });
+      router.push('/home');
     } else {
-      setError("Tên đăng nhập hoặc mật khẩu không chính xác!");
+      setError("Tên đăng nhập hoặc mật khẩu không chính xác");
     }
   };
 
@@ -25,7 +34,8 @@ export default function LoginPage() {
       {/* Form Đăng nhập */}
       <div className="w-full md:w-1/2 bg-gray-100 flex flex-col justify-center items-center p-8">
         <h1 className="text-4xl font-bold mb-8 text-gray-800">Shopee New</h1>
-        <form className="w-full max-w-lg" onSubmit={handleLogin}>
+        <form className="w-full max-w-lg" onSubmit={handleSubmit}>
+          {error && <p className="text-red-500 mb-4">{error}</p>}
           <div className="mb-6">
             <label htmlFor="username" className="block text-lg font-medium text-gray-700">
               Tên đăng nhập
@@ -36,7 +46,8 @@ export default function LoginPage() {
               placeholder="Nhập tên đăng nhập"
               className="mt-3 p-4 w-full border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black text-lg"
               value={username}
-              onChange={(e) => setUsername(e.target.value)} // Lưu tên đăng nhập
+              onChange={(e) => setUsername(e.target.value)}
+              required
             />
           </div>
           <div className="mb-6">
@@ -49,10 +60,10 @@ export default function LoginPage() {
               placeholder="Nhập mật khẩu"
               className="mt-3 p-4 w-full border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black text-lg"
               value={password}
-              onChange={(e) => setPassword(e.target.value)} // Lưu mật khẩu
+              onChange={(e) => setPassword(e.target.value)}
+              required
             />
           </div>
-          {error && <p className="text-red-500 mb-4">{error}</p>} {/* Hiển thị thông báo lỗi */}
           <div className="text-right mb-4">
             <a href="#" className="text-base text-blue-600 hover:underline">
               Quên mật khẩu?
@@ -61,7 +72,7 @@ export default function LoginPage() {
           <div className="flex justify-between items-center gap-4">
             <button
               type="button"
-              onClick={() => router.push("/register")} // Chuyển hướng đến trang Đăng ký
+              onClick={() => router.push('/register')}
               className="w-full p-5 bg-gray-300 text-lg rounded-lg text-gray-800 hover:bg-gray-400"
             >
               Đăng ký
