@@ -25,7 +25,7 @@ export default function ProductDetail({ params }) {
   if (!product) {
     return (
       <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-        <div className="text-gray-600">Đang tải...</div>
+        <div className="text-black">Đang tải...</div>
       </div>
     );
   }
@@ -40,7 +40,7 @@ export default function ProductDetail({ params }) {
             <span className="mx-1">›</span>
             <Link href="/category/thoi-trang" className="text-[#0055AA] hover:opacity-80">Thời Trang</Link>
             <span className="mx-1">›</span>
-            <span className="text-gray-600">{product.name}</span>
+            <span className="text-black">{product.name}</span>
           </div>
         </div>
       </div>
@@ -76,7 +76,7 @@ export default function ProductDetail({ params }) {
                 ))}
               </div>
               <div className="flex items-center gap-4 mt-4 border-t pt-4">
-                <span className="text-gray-500">Chia sẻ:</span>
+                <span className="text-black">Chia sẻ:</span>
                 <div className="flex gap-2">
                   <button className="w-8 h-8 rounded-full bg-[#3b5998] text-white flex items-center justify-center">
                     <i className="fab fa-facebook-f"></i>
@@ -90,7 +90,7 @@ export default function ProductDetail({ params }) {
                 </div>
                 <button className="ml-auto flex items-center gap-2 text-[#ee4d2d]">
                   <i className="far fa-heart"></i>
-                  <span>Đã thích (21)</span>
+                  <span className="text-black">Đã thích (21)</span>
                 </button>
               </div>
             </div>
@@ -99,7 +99,7 @@ export default function ProductDetail({ params }) {
             <div className="col-span-7">
               <div className="flex items-center gap-2">
                 <span className="text-white bg-[#ee4d2d] px-1 text-xs">Yêu thích</span>
-                <h1 className="text-xl">{product.name}</h1>
+                <h1 className="text-xl font-bold text-black">{product.name}</h1>
               </div>
 
               <div className="flex items-center gap-4 mt-4">
@@ -112,12 +112,12 @@ export default function ProductDetail({ params }) {
                   </div>
                 </div>
                 <div className="border-l border-gray-300 pl-4">
-                  <span className="text-lg">{product.ratingCount}</span>
-                  <span className="text-gray-500 ml-1">Đánh Giá</span>
+                  <span className="text-black">{product.ratingCount}</span>
+                  <span className="text-black ml-1">Đánh Giá</span>
                 </div>
                 <div className="border-l border-gray-300 pl-4">
-                  <span className="text-lg">{product.sold.toLocaleString()}</span>
-                  <span className="text-gray-500 ml-1">Đã bán</span>
+                  <span className="text-black">{product.sold.toLocaleString()}</span>
+                  <span className="text-black ml-1">Đã bán</span>
                 </div>
                 <button className="ml-auto text-sm text-gray-500 hover:text-[#ee4d2d]">
                   Tố cáo
@@ -126,7 +126,7 @@ export default function ProductDetail({ params }) {
 
               <div className="bg-gray-50 p-4 mt-4">
                 <div className="flex items-baseline gap-2">
-                  <span className="text-gray-500 line-through">₫{product.oldPrice.toLocaleString()}</span>
+                  <span className="text-black line-through">₫{product.oldPrice.toLocaleString()}</span>
                   <span className="text-[#ee4d2d] text-3xl">₫{product.price.toLocaleString()}</span>
                   <span className="bg-[#ee4d2d] text-white px-1 text-xs">{product.discount}% GIẢM</span>
                 </div>
@@ -134,22 +134,22 @@ export default function ProductDetail({ params }) {
 
               <div className="mt-6 space-y-6">
                 <div className="flex items-center gap-4">
-                  <span className="text-gray-500 w-24">Combo Khuyến Mãi</span>
+                  <span className="text-black w-24">Combo Khuyến Mãi</span>
                   <span className="text-[#ee4d2d] border border-[#ee4d2d] px-2 py-1 text-sm">
                     Mua 2 & giảm 1%
                   </span>
                 </div>
 
                 <div className="flex items-center gap-4">
-                  <span className="text-gray-500 w-24">Vận Chuyển</span>
+                  <span className="text-black w-24">Vận Chuyển</span>
                   <div>
                     <div className="flex items-center gap-2">
                       <i className="fas fa-truck text-[#00bfa5]"></i>
-                      <span>Miễn phí vận chuyển</span>
+                      <span className="text-black">Miễn phí vận chuyển</span>
                     </div>
                     <div className="flex items-center gap-2 mt-1">
                       <i className="fas fa-clock text-[#00bfa5]"></i>
-                      <span>Nhận vào 28 Th04</span>
+                      <span className="text-black">Nhận vào 28 Th04</span>
                     </div>
                     <span className="text-gray-500 text-sm block mt-1">
                       Tặng Voucher ₫15.000 đơn giao sau thời gian trên
@@ -158,7 +158,7 @@ export default function ProductDetail({ params }) {
                 </div>
 
                 <div className="flex gap-4">
-                  <span className="text-gray-500 w-24">Màu Sắc</span>
+                  <span className="text-black w-24">Màu Sắc</span>
                   <div className="flex flex-wrap gap-2">
                     {product.colors.map((color, index) => (
                       <button
@@ -170,7 +170,7 @@ export default function ProductDetail({ params }) {
                         }`}
                         onClick={() => setSelectedColor(color)}
                       >
-                        {color}
+                        <span className="text-black">{color}</span>
                       </button>
                     ))}
                   </div>
@@ -178,7 +178,7 @@ export default function ProductDetail({ params }) {
 
                 {product.sizes && (
                   <div className="flex gap-4">
-                    <span className="text-gray-500 w-24">Kích Thước</span>
+                    <span className="text-black w-24">Kích Thước</span>
                     <div className="flex flex-wrap gap-2">
                       {product.sizes.map((size, index) => (
                         <button
@@ -190,7 +190,7 @@ export default function ProductDetail({ params }) {
                           }`}
                           onClick={() => setSelectedSize(size)}
                         >
-                          {size}
+                          <span className="text-black">{size}</span>
                         </button>
                       ))}
                     </div>
@@ -198,27 +198,27 @@ export default function ProductDetail({ params }) {
                 )}
 
                 <div className="flex items-center gap-4">
-                  <span className="text-gray-500 w-24">Số Lượng</span>
+                  <span className="text-black w-24">Số Lượng</span>
                   <div className="flex items-center">
                     <button
-                      className="w-8 h-8 border border-gray-300 flex items-center justify-center hover:bg-gray-100"
+                      className="w-8 h-8 border border-[#ee4d2d] text-[#ee4d2d] flex items-center justify-center hover:bg-[#fef6f5]"
                       onClick={() => setQuantity(Math.max(1, quantity - 1))}
                     >
                       -
                     </button>
                     <input
                       type="number"
-                      className="w-16 h-8 border-t border-b border-gray-300 text-center"
+                      className="w-16 h-8 border-t border-b border-[#ee4d2d] text-center text-[#ee4d2d]"
                       value={quantity}
                       onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
                     />
                     <button
-                      className="w-8 h-8 border border-gray-300 flex items-center justify-center hover:bg-gray-100"
+                      className="w-8 h-8 border border-[#ee4d2d] text-[#ee4d2d] flex items-center justify-center hover:bg-[#fef6f5]"
                       onClick={() => setQuantity(quantity + 1)}
                     >
                       +
                     </button>
-                    <span className="ml-4 text-gray-500">{product.stock} sản phẩm có sẵn</span>
+                    <span className="ml-4 text-black">{product.stock} sản phẩm có sẵn</span>
                   </div>
                 </div>
 
@@ -235,8 +235,8 @@ export default function ProductDetail({ params }) {
 
               {product.description && (
                 <div className="mt-8 pt-8 border-t">
-                  <h2 className="text-lg font-medium mb-4">Mô tả sản phẩm</h2>
-                  <p className="text-gray-600 whitespace-pre-line">{product.description}</p>
+                  <h2 className="text-black text-lg font-medium mb-4">Mô tả sản phẩm</h2>
+                  <p className="text-black whitespace-pre-line">{product.description}</p>
                 </div>
               )}
             </div>
@@ -245,4 +245,4 @@ export default function ProductDetail({ params }) {
       </div>
     </div>
   );
-} 
+}
