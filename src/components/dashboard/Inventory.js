@@ -1,8 +1,23 @@
-import React from "react";
+import React, { useState, useRef } from "react";
 
 export default function Inventory() {
+  const [showModal, setShowModal] = useState(false);
+  const [image, setImage] = useState(null);
+  const fileInputRef = useRef(null);
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setImage(reader.result);
+    };
+    if (file) {
+      reader.readAsDataURL(file);
+    }
+  };
+
   return (
-    <div>
+    <div className="relative">
       {/* Thanh tìm kiếm */}
       <div className="flex items-center justify-between mb-6">
         <input
@@ -11,7 +26,7 @@ export default function Inventory() {
           className="w-1/2 px-4 py-2 border border-gray-300 rounded-md bg-white text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
         <div className="flex gap-2">
-          <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">Thêm sản phẩm</button>
+          <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition" onClick={() => setShowModal(true)}>Thêm sản phẩm</button>
           <button className="px-4 py-2 bg-white border border-gray-300 text-black rounded hover:bg-gray-100 transition">Filters</button>
           <button className="px-4 py-2 bg-white border border-gray-300 text-black rounded hover:bg-gray-100 transition">Tải xuống</button>
         </div>
@@ -90,6 +105,81 @@ export default function Inventory() {
           <button className="px-4 py-2 bg-white border border-gray-300 text-black rounded hover:bg-gray-100 transition">Sau</button>
         </div>
       </div>
+
+      {/* Overlay & Modal */}
+      {showModal && (
+        <>
+          {/* Overlay blur, không tối màu */}
+          <div className="fixed inset-0 z-40 backdrop-blur-[3px] bg-white/40 transition-all"></div>
+          <div className="fixed inset-0 z-50 flex items-center justify-center">
+            <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-xl border border-gray-100">
+              <h2 className="text-2xl font-semibold text-black mb-8 text-left">Sản phẩm mới</h2>
+              <form>
+                <div className="grid grid-cols-1 gap-4">
+                  <div>
+                    <label className="block text-black text-sm mb-1">Tên sản phẩm</label>
+                    <input className="w-full border border-gray-300 rounded px-3 py-2 text-black bg-gray-50" placeholder="Nhập tên sản phẩm" />
+                  </div>
+                  <div>
+                    <label className="block text-black text-sm mb-1">Mã sản phẩm</label>
+                    <input className="w-full border border-gray-300 rounded px-3 py-2 text-black bg-gray-50" placeholder="Nhập mã sản phẩm" />
+                  </div>
+                  <div>
+                    <label className="block text-black text-sm mb-1">Loại sản phẩm</label>
+                    <select className="w-full border border-gray-300 rounded px-3 py-2 text-black bg-gray-50">
+                      <option>Chọn loại sản phẩm</option>
+                      <option>Đồ uống</option>
+                      <option>Thực phẩm</option>
+                      <option>Khác</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-black text-sm mb-1">Giá nhập</label>
+                    <input className="w-full border border-gray-300 rounded px-3 py-2 text-black bg-gray-50" placeholder="Nhập giá nhập" />
+                  </div>
+                  <div>
+                    <label className="block text-black text-sm mb-1">Số lượng</label>
+                    <input className="w-full border border-gray-300 rounded px-3 py-2 text-black bg-gray-50" placeholder="Nhập số lượng" />
+                  </div>
+                  <div>
+                    <label className="block text-black text-sm mb-1">Hạn sử dụng</label>
+                    <input className="w-full border border-gray-300 rounded px-3 py-2 text-black bg-gray-50" placeholder="Nhập hạn sử dụng" />
+                  </div>
+                  <div>
+                    <label className="block text-black text-sm mb-1">Giá trị giới hạn</label>
+                    <input className="w-full border border-gray-300 rounded px-3 py-2 text-black bg-gray-50" placeholder="Nhập giá trị giới hạn" />
+                  </div>
+                  {/* Ảnh sản phẩm ở dưới cùng */}
+                  <div className="flex flex-col items-center mt-2">
+                    <label className="block text-black text-sm mb-1 w-full text-left">Ảnh sản phẩm</label>
+                    <div
+                      className="w-24 h-24 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center cursor-pointer bg-gray-50 mb-2"
+                      onClick={() => fileInputRef.current.click()}
+                    >
+                      {image ? (
+                        <img src={image} alt="preview" className="w-full h-full object-cover rounded-lg" />
+                      ) : (
+                        <span className="text-gray-400 text-xs text-center">Thả ảnh vào đây<br/>hoặc<br/><span className='text-blue-500 underline'>Tải ảnh lên</span></span>
+                      )}
+                      <input
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        ref={fileInputRef}
+                        onChange={handleImageChange}
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div className="flex justify-end gap-2 mt-8">
+                  <button type="button" className="px-5 py-2 rounded border border-gray-300 bg-white text-black hover:bg-gray-100" onClick={() => setShowModal(false)}>Hủy</button>
+                  <button type="submit" className="px-5 py-2 rounded bg-blue-600 text-white hover:bg-blue-700">Thêm sản phẩm</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }
