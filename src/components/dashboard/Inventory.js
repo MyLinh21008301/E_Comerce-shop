@@ -1,9 +1,13 @@
 import React, { useState, useRef } from "react";
+import { mockProducts } from '@/data/mockData';
+import { CATEGORIES } from '@/utils/constants';
+import { useRouter } from 'next/navigation';
 
 export default function Inventory() {
   const [showModal, setShowModal] = useState(false);
   const [image, setImage] = useState(null);
   const fileInputRef = useRef(null);
+  const router = useRouter();
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -67,33 +71,28 @@ export default function Inventory() {
               <th className="py-3 text-black">Sản phẩm</th>
               <th className="py-3 text-black">Giá nhập</th>
               <th className="py-3 text-black">Số lượng</th>
-              <th className="py-3 text-black">Giá trị giới hạn</th>
-              <th className="py-3 text-black">Hạn sử dụng</th>
+              <th className="py-3 text-black">Loại</th>
               <th className="py-3 text-black">Trạng thái</th>
             </tr>
           </thead>
           <tbody>
-            {[
-              { name: 'Maggi', price: 'đ430', quantity: '43 PCS', limit: '12 PCS', expiry: '11/12/22', status: 'in' },
-              { name: 'Bru', price: 'đ257', quantity: '22 PCS', limit: '12 PCS', expiry: '21/12/22', status: 'out' },
-              { name: 'Red Bull', price: 'đ405', quantity: '36 PCS', limit: '9 PCS', expiry: '5/12/22', status: 'in' },
-              { name: 'Bourn Vita', price: 'đ502', quantity: '14 PCS', limit: '6 PCS', expiry: '8/12/22', status: 'out' },
-              { name: 'Horlicks', price: 'đ530', quantity: '5 PCS', limit: '5 PCS', expiry: '9/1/23', status: 'in' },
-              { name: 'Harpic', price: 'đ605', quantity: '10 PCS', limit: '5 PCS', expiry: '9/1/23', status: 'in' },
-              { name: 'Ariel', price: 'đ408', quantity: '23 PCS', limit: '7 PCS', expiry: '15/12/23', status: 'out' },
-              { name: 'Scotch Brite', price: 'đ359', quantity: '43 PCS', limit: '8 PCS', expiry: '6/6/23', status: 'in' },
-              { name: 'Coca cola', price: 'đ205', quantity: '41 PCS', limit: '10 PCS', expiry: '11/11/22', status: 'low' },
-            ].map((item, idx) => (
-              <tr key={idx} className="border-t hover:bg-gray-50 transition">
-                <td className="py-3 text-black font-medium">{item.name}</td>
-                <td className="py-3 text-black">{item.price}</td>
-                <td className="py-3 text-black">{item.quantity}</td>
-                <td className="py-3 text-black">{item.limit}</td>
-                <td className="py-3 text-black">{item.expiry}</td>
+            {mockProducts.map((item) => (
+              <tr key={item.id} className="border-t hover:bg-blue-50 transition cursor-pointer" onClick={() => router.push(`/dashboard/product/${item.id}`)}>
+                <td className="py-3 text-black font-medium flex items-center gap-2">
+                  <img src={item.image} alt={item.name} className="w-10 h-10 object-cover rounded" />
+                  {item.name}
+                </td>
+                <td className="py-3 text-black">₫{item.price.toLocaleString()}</td>
+                <td className="py-3 text-black">{item.stock}</td>
+                <td className="py-3 text-black">{CATEGORIES.find(c => item.name.toLowerCase().includes(c.name.toLowerCase()))?.name || 'Khác'}</td>
                 <td className="py-3">
-                  {item.status === 'in' && <span className="text-green-600 font-semibold">In- stock</span>}
-                  {item.status === 'out' && <span className="text-red-500 font-semibold">Out of stock</span>}
-                  {item.status === 'low' && <span className="text-yellow-500 font-semibold">Low stock</span>}
+                  {item.stock > 10 ? (
+                    <span className="px-2 py-1 rounded bg-green-100 text-green-700 text-xs">Còn hàng</span>
+                  ) : item.stock > 0 ? (
+                    <span className="px-2 py-1 rounded bg-yellow-100 text-yellow-700 text-xs">Sắp hết</span>
+                  ) : (
+                    <span className="px-2 py-1 rounded bg-red-100 text-red-700 text-xs">Hết hàng</span>
+                  )}
                 </td>
               </tr>
             ))}
@@ -128,9 +127,9 @@ export default function Inventory() {
                     <label className="block text-black text-sm mb-1">Loại sản phẩm</label>
                     <select className="w-full border border-gray-300 rounded px-3 py-2 text-black bg-gray-50">
                       <option>Chọn loại sản phẩm</option>
-                      <option>Đồ uống</option>
-                      <option>Thực phẩm</option>
-                      <option>Khác</option>
+                      {CATEGORIES.map(c => (
+                        <option key={c.id} value={c.name}>{c.name}</option>
+                      ))}
                     </select>
                   </div>
                   <div>
