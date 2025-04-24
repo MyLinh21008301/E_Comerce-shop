@@ -1,0 +1,95 @@
+import React from "react";
+
+export default function Inventory() {
+  return (
+    <div>
+      {/* Thanh tìm kiếm */}
+      <div className="flex items-center justify-between mb-6">
+        <input
+          type="text"
+          placeholder="Tìm sản phẩm, nhà cung cấp, đơn hàng"
+          className="w-1/2 px-4 py-2 border border-gray-300 rounded-md bg-white text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+        <div className="flex gap-2">
+          <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">Thêm sản phẩm</button>
+          <button className="px-4 py-2 bg-white border border-gray-300 text-black rounded hover:bg-gray-100 transition">Filters</button>
+          <button className="px-4 py-2 bg-white border border-gray-300 text-black rounded hover:bg-gray-100 transition">Tải xuống</button>
+        </div>
+      </div>
+
+      {/* Tổng quan kho */}
+      <div className="grid grid-cols-4 gap-4 mb-8">
+        <div className="bg-white rounded-lg shadow p-4 flex flex-col items-start">
+          <span className="text-xs font-semibold text-blue-600 mb-1">Loại sản phẩm</span>
+          <span className="text-2xl font-bold text-black">14</span>
+          <span className="text-xs text-gray-500 mt-1">7 ngày gần đây</span>
+        </div>
+        <div className="bg-white rounded-lg shadow p-4 flex flex-col items-start">
+          <span className="text-xs font-semibold text-orange-500 mb-1">Tổng số lượng sản phẩm</span>
+          <span className="text-2xl font-bold text-black">868</span>
+          <span className="text-xs text-gray-500 mt-1">7 ngày gần đây</span>
+        </div>
+        <div className="bg-white rounded-lg shadow p-4 flex flex-col items-start">
+          <span className="text-xs font-semibold text-purple-600 mb-1">Top Selling</span>
+          <span className="text-2xl font-bold text-black">5</span>
+          <span className="text-xs text-gray-500 mt-1">7 ngày gần đây</span>
+        </div>
+        <div className="bg-white rounded-lg shadow p-4 flex flex-col items-start">
+          <span className="text-xs font-semibold text-red-500 mb-1">Hàng tồn kho thấp</span>
+          <span className="text-2xl font-bold text-black">12</span>
+          <span className="text-xs text-gray-500 mt-1">2 không có trong kho</span>
+        </div>
+      </div>
+
+      {/* Danh sách sản phẩm */}
+      <div className="bg-white rounded-lg shadow-sm p-6">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-xl font-bold text-black">Danh sách sản phẩm</h2>
+        </div>
+        <table className="w-full text-left border-t">
+          <thead>
+            <tr className="text-gray-600">
+              <th className="py-3 text-black">Sản phẩm</th>
+              <th className="py-3 text-black">Giá nhập</th>
+              <th className="py-3 text-black">Số lượng</th>
+              <th className="py-3 text-black">Giá trị giới hạn</th>
+              <th className="py-3 text-black">Hạn sử dụng</th>
+              <th className="py-3 text-black">Trạng thái</th>
+            </tr>
+          </thead>
+          <tbody>
+            {[
+              { name: 'Maggi', price: 'đ430', quantity: '43 PCS', limit: '12 PCS', expiry: '11/12/22', status: 'in' },
+              { name: 'Bru', price: 'đ257', quantity: '22 PCS', limit: '12 PCS', expiry: '21/12/22', status: 'out' },
+              { name: 'Red Bull', price: 'đ405', quantity: '36 PCS', limit: '9 PCS', expiry: '5/12/22', status: 'in' },
+              { name: 'Bourn Vita', price: 'đ502', quantity: '14 PCS', limit: '6 PCS', expiry: '8/12/22', status: 'out' },
+              { name: 'Horlicks', price: 'đ530', quantity: '5 PCS', limit: '5 PCS', expiry: '9/1/23', status: 'in' },
+              { name: 'Harpic', price: 'đ605', quantity: '10 PCS', limit: '5 PCS', expiry: '9/1/23', status: 'in' },
+              { name: 'Ariel', price: 'đ408', quantity: '23 PCS', limit: '7 PCS', expiry: '15/12/23', status: 'out' },
+              { name: 'Scotch Brite', price: 'đ359', quantity: '43 PCS', limit: '8 PCS', expiry: '6/6/23', status: 'in' },
+              { name: 'Coca cola', price: 'đ205', quantity: '41 PCS', limit: '10 PCS', expiry: '11/11/22', status: 'low' },
+            ].map((item, idx) => (
+              <tr key={idx} className="border-t hover:bg-gray-50 transition">
+                <td className="py-3 text-black font-medium">{item.name}</td>
+                <td className="py-3 text-black">{item.price}</td>
+                <td className="py-3 text-black">{item.quantity}</td>
+                <td className="py-3 text-black">{item.limit}</td>
+                <td className="py-3 text-black">{item.expiry}</td>
+                <td className="py-3">
+                  {item.status === 'in' && <span className="text-green-600 font-semibold">In- stock</span>}
+                  {item.status === 'out' && <span className="text-red-500 font-semibold">Out of stock</span>}
+                  {item.status === 'low' && <span className="text-yellow-500 font-semibold">Low stock</span>}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <div className="flex justify-between items-center mt-4">
+          <button className="px-4 py-2 bg-white border border-gray-300 text-black rounded hover:bg-gray-100 transition">Trước</button>
+          <span className="text-black">Trang 1 trong 10</span>
+          <button className="px-4 py-2 bg-white border border-gray-300 text-black rounded hover:bg-gray-100 transition">Sau</button>
+        </div>
+      </div>
+    </div>
+  );
+}
