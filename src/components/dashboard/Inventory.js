@@ -1,13 +1,13 @@
 import React, { useState, useRef } from "react";
 import { mockProducts } from '@/data/mockData';
 import { CATEGORIES } from '@/utils/constants';
-import { useRouter } from 'next/navigation';
+import ProductDetailView from './ProductDetailView'; // Import component mới
 
 export default function Inventory() {
   const [showModal, setShowModal] = useState(false);
   const [image, setImage] = useState(null);
   const fileInputRef = useRef(null);
-  const router = useRouter();
+  const [selectedProductId, setSelectedProductId] = useState(null); // State mới
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -20,8 +20,19 @@ export default function Inventory() {
     }
   };
 
+  // Hàm xử lý khi click vào sản phẩm
+  const handleProductClick = (productId) => {
+    setSelectedProductId(productId);
+  };
+
+  // Hàm xử lý khi nhấn nút Back trong chi tiết sản phẩm
+  const handleBackToList = () => {
+    setSelectedProductId(null);
+  };
+
   return (
     <div className="relative">
+      {/* Thanh tìm kiếm và Tổng quan luôn hiển thị */}
       {/* Thanh tìm kiếm */}
       <div className="flex items-center justify-between mb-6">
         <input
@@ -60,52 +71,57 @@ export default function Inventory() {
         </div>
       </div>
 
-      {/* Danh sách sản phẩm */}
-      <div className="bg-white rounded-lg shadow-sm p-6">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-bold text-black">Danh sách sản phẩm</h2>
-        </div>
-        <table className="w-full text-left border-t">
-          <thead>
-            <tr className="text-gray-600">
-              <th className="py-3 text-black">Sản phẩm</th>
-              <th className="py-3 text-black">Giá nhập</th>
-              <th className="py-3 text-black">Số lượng</th>
-              <th className="py-3 text-black">Loại</th>
-              <th className="py-3 text-black">Trạng thái</th>
-            </tr>
-          </thead>
-          <tbody>
-            {mockProducts.map((item) => (
-              <tr key={item.id} className="border-t hover:bg-blue-50 transition cursor-pointer" onClick={() => router.push(`/dashboard/product/${item.id}`)}>
-                <td className="py-3 text-black font-medium flex items-center gap-2">
-                  <img src={item.image} alt={item.name} className="w-10 h-10 object-cover rounded" />
-                  {item.name}
-                </td>
-                <td className="py-3 text-black">₫{item.price.toLocaleString()}</td>
-                <td className="py-3 text-black">{item.stock}</td>
-                <td className="py-3 text-black">{CATEGORIES.find(c => item.name.toLowerCase().includes(c.name.toLowerCase()))?.name || 'Khác'}</td>
-                <td className="py-3">
-                  {item.stock > 10 ? (
-                    <span className="px-2 py-1 rounded bg-green-100 text-green-700 text-xs">Còn hàng</span>
-                  ) : item.stock > 0 ? (
-                    <span className="px-2 py-1 rounded bg-yellow-100 text-yellow-700 text-xs">Sắp hết</span>
-                  ) : (
-                    <span className="px-2 py-1 rounded bg-red-100 text-red-700 text-xs">Hết hàng</span>
-                  )}
-                </td>
+      {/* Phần nội dung chính: Danh sách hoặc Chi tiết */}
+      {selectedProductId ? (
+        <ProductDetailView productId={selectedProductId} onBack={handleBackToList} />
+      ) : (
+        <div className="bg-white rounded-lg shadow-sm p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-bold text-black">Danh sách sản phẩm</h2>
+          </div>
+          <table className="w-full text-left border-t">
+            <thead>
+              <tr className="text-gray-600">
+                <th className="py-3 text-black">Sản phẩm</th>
+                <th className="py-3 text-black">Giá nhập</th>
+                <th className="py-3 text-black">Số lượng</th>
+                <th className="py-3 text-black">Loại</th>
+                <th className="py-3 text-black">Trạng thái</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-        <div className="flex justify-between items-center mt-4">
-          <button className="px-4 py-2 bg-white border border-gray-300 text-black rounded hover:bg-gray-100 transition">Trước</button>
-          <span className="text-black">Trang 1 trong 10</span>
-          <button className="px-4 py-2 bg-white border border-gray-300 text-black rounded hover:bg-gray-100 transition">Sau</button>
+            </thead>
+            <tbody>
+              {mockProducts.map((item) => (
+                // Cập nhật onClick
+                <tr key={item.id} className="border-t hover:bg-blue-50 transition cursor-pointer" onClick={() => handleProductClick(item.id)}>
+                  <td className="py-3 text-black font-medium flex items-center gap-2">
+                    <img src={item.image} alt={item.name} className="w-10 h-10 object-cover rounded" />
+                    {item.name}
+                  </td>
+                  <td className="py-3 text-black">₫{item.price.toLocaleString()}</td>
+                  <td className="py-3 text-black">{item.stock}</td>
+                  <td className="py-3 text-black">{CATEGORIES.find(c => item.name.toLowerCase().includes(c.name.toLowerCase()))?.name || 'Khác'}</td>
+                  <td className="py-3">
+                    {item.stock > 10 ? (
+                      <span className="px-2 py-1 rounded bg-green-100 text-green-700 text-xs">Còn hàng</span>
+                    ) : item.stock > 0 ? (
+                      <span className="px-2 py-1 rounded bg-yellow-100 text-yellow-700 text-xs">Sắp hết</span>
+                    ) : (
+                      <span className="px-2 py-1 rounded bg-red-100 text-red-700 text-xs">Hết hàng</span>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <div className="flex justify-between items-center mt-4">
+            <button className="px-4 py-2 bg-white border border-gray-300 text-black rounded hover:bg-gray-100 transition">Trước</button>
+            <span className="text-black">Trang 1 trong 10</span>
+            <button className="px-4 py-2 bg-white border border-gray-300 text-black rounded hover:bg-gray-100 transition">Sau</button>
+          </div>
         </div>
-      </div>
+      )}
 
-      {/* Overlay & Modal */}
+      {/* Modal thêm sản phẩm (giữ nguyên) */}
       {showModal && (
         <>
           {/* Overlay blur, không tối màu */}
@@ -182,3 +198,5 @@ export default function Inventory() {
     </div>
   );
 }
+
+
