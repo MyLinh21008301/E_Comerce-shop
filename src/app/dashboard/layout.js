@@ -20,7 +20,7 @@ export default function DashboardLayout({ children }) {
     { icon: "home", label: "Trang chủ", href: "/dashboard" },
     { icon: "box", label: "Kho hàng", href: "/dashboard/inventory" },
     { icon: "chart-bar", label: "Báo cáo", href: "/dashboard/report" },
-    { icon: "users", label: "Nhà cung cấp", href: "#" }, // Cập nhật href khi có trang
+    { icon: "users", label: "Nhà cung cấp", href: "/dashboard/supplier" }, // Cập nhật href
     { icon: "shopping-cart", label: "Đơn hàng", href: "#" },
     { icon: "store", label: "Quản lý cửa hàng", href: "#" },
     { icon: "cog", label: "Cài đặt", href: "#" },
@@ -36,7 +36,7 @@ export default function DashboardLayout({ children }) {
             {/* Sử dụng Image component của Next.js nếu có thể */}
             <img src="/images/logo.png" alt="Shopee Logo" className="w-full h-full object-contain" />
           </div>
-          <span className="text-[#ee4d2d] font-bold text-xl">SHOPEE</span>
+          <span className="text-[#ee4d2d] font-bold text-xl">KANBAN</span>
         </div>
 
         {/* Navigation Items */}
