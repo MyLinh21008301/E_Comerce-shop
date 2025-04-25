@@ -1,7 +1,30 @@
-// src/components/dashboard/ReportView.js
-import React from 'react';
+'use client'; // Cần thiết vì sử dụng useState và useEffect
 
-// Placeholder data - replace with actual data fetching later
+import React, { useState, useEffect } from 'react';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js';
+import { Line } from 'react-chartjs-2';
+
+// Đăng ký các thành phần Chart.js
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+);
+
+// --- Dữ liệu giả --- 
 const overviewData = {
   totalProfit: '₫21,190',
   revenue: '₫18,300',
@@ -25,7 +48,72 @@ const topProducts = [
   { name: 'Mũ', id: '23567', type: 'Thời trang', remaining: '125 Packet', turnover: '₫9,000', increase: '1%' },
 ];
 
+// Dữ liệu giả cho biểu đồ Lợi nhuận & Doanh thu
+const mockChartData = {
+  labels: ['Tuần 1', 'Tuần 2', 'Tuần 3', 'Tuần 4', 'Tuần 5', 'Tuần 6', 'Tuần 7'],
+  datasets: [
+    {
+      label: 'Doanh thu',
+      data: [15000, 18300, 16500, 19000, 17500, 21000, 20000],
+      borderColor: 'rgb(53, 162, 235)',
+      backgroundColor: 'rgba(53, 162, 235, 0.5)',
+      tension: 0.3, // Làm mượt đường kẻ
+    },
+    {
+      label: 'Lợi nhuận',
+      data: [5000, 6190, 5500, 7000, 6000, 8000, 7500],
+      borderColor: 'rgb(255, 159, 64)',
+      backgroundColor: 'rgba(255, 159, 64, 0.5)',
+      tension: 0.3,
+    },
+  ],
+};
+// --- Kết thúc dữ liệu giả ---
+
 const ReportView = () => {
+  // State để lưu dữ liệu biểu đồ
+  const [chartData, setChartData] = useState({
+    labels: [],
+    datasets: [],
+  });
+  const [selectedPeriod, setSelectedPeriod] = useState('Weekly'); // State cho bộ lọc thời gian
+
+  // useEffect để mô phỏng việc fetch dữ liệu
+  useEffect(() => {
+    // *** NƠI GỌI API SAU NÀY ***
+    // Ví dụ: fetch(`/api/reports/profit-revenue?period=${selectedPeriod}`)
+    //       .then(res => res.json())
+    //       .then(data => {
+    //         // Xử lý dữ liệu trả về từ API để có định dạng giống mockChartData
+    //         const formattedData = { ... }; 
+    //         setChartData(formattedData);
+    //       });
+
+    // Hiện tại, chỉ dùng dữ liệu giả
+    console.log(`Đang tải dữ liệu cho: ${selectedPeriod}`); // Mô phỏng thay đổi khi chọn period
+    setChartData(mockChartData); 
+
+  }, [selectedPeriod]); // Chạy lại khi selectedPeriod thay đổi
+
+  // Cấu hình cho biểu đồ
+  const chartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: 'bottom', // Đặt chú giải ở dưới
+      },
+      title: {
+        display: false, // Không hiển thị tiêu đề mặc định của chart
+      },
+    },
+    scales: {
+        y: {
+            beginAtZero: true // Bắt đầu trục Y từ 0
+        }
+    }
+  };
+
   return (
     <div className="p-6 space-y-6 bg-gray-50 min-h-screen">
       {/* Overview Section */}
@@ -97,16 +185,24 @@ const ReportView = () => {
         <div className="lg:col-span-2 bg-white p-4 rounded-lg shadow">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-lg font-semibold text-gray-700">Lợi nhuận & Doanh thu</h2>
-            <button className="text-sm border rounded px-2 py-1 hover:bg-gray-100">Weekly</button>
+            {/* Bộ lọc thời gian */}
+            <select 
+              value={selectedPeriod}
+              onChange={(e) => setSelectedPeriod(e.target.value)}
+              className="text-sm border rounded px-2 py-1 hover:bg-gray-100 bg-white text-gray-700"
+            >
+              <option value="Weekly">Hàng tuần</option>
+              <option value="Monthly">Hàng tháng</option>
+              <option value="Yearly">Hàng năm</option>
+            </select>
           </div>
-          {/* Chart Placeholder */}
-          <div className="h-64 bg-gray-100 flex items-center justify-center rounded">
-            <p className="text-gray-500">Biểu đồ Lợi nhuận & Doanh thu (Cần tích hợp thư viện biểu đồ)</p>
-            {/* TODO: Integrate a chart library like Chart.js or Recharts here */}
-          </div>
-           <div className="flex justify-center items-center space-x-4 mt-4 text-sm">
-              <span className="flex items-center"><span className="w-3 h-3 bg-blue-500 rounded-full mr-1"></span>Doanh thu</span>
-              <span className="flex items-center"><span className="w-3 h-3 bg-orange-300 rounded-full mr-1"></span>Lợi nhuận</span>
+          {/* Chart Container */}
+          <div className="h-64 relative"> {/* Thêm relative để chart chiếm đúng không gian */}
+            {chartData.labels.length > 0 ? (
+              <Line options={chartOptions} data={chartData} />
+            ) : (
+              <div className="absolute inset-0 flex items-center justify-center text-gray-500">Đang tải dữ liệu...</div>
+            )}
           </div>
         </div>
       </div>
