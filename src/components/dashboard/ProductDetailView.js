@@ -98,7 +98,7 @@ export default function ProductDetailView({ productId, onBack }) {
               {/* Số liệu kho */}
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-500">Opening Stock</span>
+                  <span className="text-black">Opening Stock</span>
                   <span className="text-black font-semibold">40</span>
                 </div>
                 <div className="flex justify-between items-center">

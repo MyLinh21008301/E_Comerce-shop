@@ -22,7 +22,7 @@ export default function DashboardProductDetail() {
     setProduct(found);
   }, [id]);
 
-  if (!product) return <div className="p-8 text-center text-gray-500">Đang tải sản phẩm...</div>;
+  if (!product) return <div className="p-8 text-center text-black">Đang tải sản phẩm...</div>;
 
   return (
     <div className="mb-6">

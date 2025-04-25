@@ -26,7 +26,7 @@ export const ProductCard = ({ product }) => {
           <div className="flex items-center gap-2">
             <span className="text-[#ee4d2d] text-lg font-medium">₫{product.price.toLocaleString()}</span>
             {product.oldPrice > 0 && (
-              <span className="text-gray-500 text-xs line-through">₫{product.oldPrice.toLocaleString()}</span>
+              <span className="text-black text-xs line-through">₫{product.oldPrice.toLocaleString()}</span>
             )}
           </div>
           <div className="flex items-center justify-between text-xs text-gray-500">
@@ -48,4 +48,4 @@ export const ProductCard = ({ product }) => {
       </div>
     </Link>
   );
-}; 
+};

@@ -52,17 +52,17 @@ export default function Inventory() {
         <div className="bg-white rounded-lg shadow p-4 flex flex-col items-start">
           <span className="text-xs font-semibold text-blue-600 mb-1">Loại sản phẩm</span>
           <span className="text-2xl font-bold text-black">14</span>
-          <span className="text-xs text-gray-500 mt-1">7 ngày gần đây</span>
+          <span className="text-xs text-black mt-1">7 ngày gần đây</span>
         </div>
         <div className="bg-white rounded-lg shadow p-4 flex flex-col items-start">
           <span className="text-xs font-semibold text-orange-500 mb-1">Tổng số lượng sản phẩm</span>
           <span className="text-2xl font-bold text-black">868</span>
-          <span className="text-xs text-gray-500 mt-1">7 ngày gần đây</span>
+          <span className="text-xs text-black mt-1">7 ngày gần đây</span>
         </div>
         <div className="bg-white rounded-lg shadow p-4 flex flex-col items-start">
           <span className="text-xs font-semibold text-purple-600 mb-1">Top Selling</span>
           <span className="text-2xl font-bold text-black">5</span>
-          <span className="text-xs text-gray-500 mt-1">7 ngày gần đây</span>
+          <span className="text-xs text-black mt-1">7 ngày gần đây</span>
         </div>
         <div className="bg-white rounded-lg shadow p-4 flex flex-col items-start">
           <span className="text-xs font-semibold text-red-500 mb-1">Hàng tồn kho thấp</span>

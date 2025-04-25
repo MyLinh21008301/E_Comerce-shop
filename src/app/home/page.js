@@ -155,7 +155,7 @@ export default function HomePage() {
             loader={
               <div className="text-center py-4">
                 <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-blue-500 border-t-transparent"></div>
-                <p className="text-gray-500 mt-2">Đang tải thêm sản phẩm...</p>
+                <p className="text-black mt-2">Đang tải thêm sản phẩm...</p>
               </div>
             }
             endMessage={

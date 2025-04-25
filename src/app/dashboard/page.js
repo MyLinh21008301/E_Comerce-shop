@@ -66,6 +66,7 @@ export default function Dashboard() {
     expenses: 13573,
     cancelled: 5,
     refunded: 17432,
+    
   };
 
   const productOverview = {
@@ -162,15 +163,15 @@ export default function Dashboard() {
           <div className="grid grid-cols-12 gap-6">
             {/* Business Overview */}
             <div className="col-span-8 bg-white rounded-lg p-6 shadow-sm">
-              <h2 className="text-lg font-medium mb-4">Tổng quan kinh doanh</h2>
+              <h2 className="text-lg font-medium mb-4 text-black">Tổng quan kinh doanh</h2>
               <div className="grid grid-cols-4 gap-4">
                 <div className="flex items-center gap-3">
                   <div className="bg-blue-100 p-3 rounded">
                     <i className="fas fa-shopping-bag text-blue-500"></i>
                   </div>
                   <div>
-                    <div className="text-lg font-medium">đ {businessOverview.sales}</div>
-                    <div className="text-sm text-gray-500">Sales</div>
+                    <div className="text-lg font-medium text-blue-600">đ {businessOverview.sales}</div>
+                    <div className="text-sm text-black">Sales</div>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
@@ -178,8 +179,8 @@ export default function Dashboard() {
                     <i className="fas fa-chart-line text-purple-500"></i>
                   </div>
                   <div>
-                    <div className="text-lg font-medium">đ {businessOverview.revenue}</div>
-                    <div className="text-sm text-gray-500">Doanh thu</div>
+                    <div className="text-lg font-medium text-green-600">đ {businessOverview.revenue}</div>
+                    <div className="text-sm text-black">Doanh thu</div>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
@@ -187,8 +188,8 @@ export default function Dashboard() {
                     <i className="fas fa-dollar-sign text-green-500"></i>
                   </div>
                   <div>
-                    <div className="text-lg font-medium">đ {businessOverview.profit}</div>
-                    <div className="text-sm text-gray-500">Lợi nhuận</div>
+                    <div className="text-lg font-medium text-red-600">đ {businessOverview.profit}</div>
+                    <div className="text-sm text-black">Lợi nhuận</div>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
@@ -196,8 +197,8 @@ export default function Dashboard() {
                     <i className="fas fa-wallet text-yellow-500"></i>
                   </div>
                   <div>
-                    <div className="text-lg font-medium">đ {businessOverview.expenses}</div>
-                    <div className="text-sm text-gray-500">Chi phí</div>
+                    <div className="text-lg font-medium text-yellow-600">đ {businessOverview.expenses}</div>
+                    <div className="text-sm text-black">Chi phí</div>
                   </div>
                 </div>
               </div>
@@ -205,15 +206,15 @@ export default function Dashboard() {
 
             {/* Inventory Overview */}
             <div className="col-span-4 bg-white rounded-lg p-6 shadow-sm">
-              <h2 className="text-lg font-medium mb-4">Tổng quan kho hàng</h2>
+              <h2 className="text-lg font-medium mb-4 text-black">Tổng quan kho hàng</h2>
               <div className="grid grid-cols-2 gap-4">
                 <div className="flex items-center gap-3">
                   <div className="bg-orange-100 p-3 rounded">
                     <i className="fas fa-box text-orange-500"></i>
                   </div>
                   <div>
-                    <div className="text-lg font-medium">{inventoryOverview.total_stock}</div>
-                    <div className="text-sm text-gray-500">Số lượng tồn kho</div>
+                    <div className="text-lg font-medium text-black">{inventoryOverview.total_stock}</div>
+                    <div className="text-sm text-black">Số lượng tồn kho</div>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
@@ -221,8 +222,8 @@ export default function Dashboard() {
                     <i className="fas fa-truck text-indigo-500"></i>
                   </div>
                   <div>
-                    <div className="text-lg font-medium">{inventoryOverview.delivered}</div>
-                    <div className="text-sm text-gray-500">Số lượng đã giao</div>
+                    <div className="text-lg font-medium text-black">{inventoryOverview.delivered}</div>
+                    <div className="text-sm text-black">Số lượng đã giao</div>
                   </div>
                 </div>
               </div>
@@ -230,15 +231,15 @@ export default function Dashboard() {
 
             {/* Purchase Overview */}
             <div className="col-span-8 bg-white rounded-lg p-6 shadow-sm">
-              <h2 className="text-lg font-medium mb-4">Tổng quan nhập hàng</h2>
+              <h2 className="text-lg font-medium mb-4 text-black">Tổng quan nhập hàng</h2>
               <div className="grid grid-cols-4 gap-4">
                 <div className="flex items-center gap-3">
                   <div className="bg-blue-100 p-3 rounded">
                     <i className="fas fa-shopping-cart text-blue-500"></i>
                   </div>
                   <div>
-                    <div className="text-lg font-medium">{purchaseOverview.purchase_orders}</div>
-                    <div className="text-sm text-gray-500">Đã nhập</div>
+                    <div className="text-lg font-medium text-black">{purchaseOverview.purchase_orders}</div>
+                    <div className="text-sm text-black">Đã nhập</div>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
@@ -246,8 +247,8 @@ export default function Dashboard() {
                     <i className="fas fa-money-bill text-green-500"></i>
                   </div>
                   <div>
-                    <div className="text-lg font-medium">đ {purchaseOverview.expenses}</div>
-                    <div className="text-sm text-gray-500">Chi phí</div>
+                    <div className="text-lg font-medium text-black">đ {purchaseOverview.expenses}</div>
+                    <div className="text-sm text-black">Chi phí</div>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
@@ -255,8 +256,8 @@ export default function Dashboard() {
                     <i className="fas fa-times-circle text-red-500"></i>
                   </div>
                   <div>
-                    <div className="text-lg font-medium">{purchaseOverview.cancelled}</div>
-                    <div className="text-sm text-gray-500">Đã hủy</div>
+                    <div className="text-lg font-medium text-black">{purchaseOverview.cancelled}</div>
+                    <div className="text-sm text-black">Đã hủy</div>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
@@ -264,8 +265,8 @@ export default function Dashboard() {
                     <i className="fas fa-undo text-yellow-500"></i>
                   </div>
                   <div>
-                    <div className="text-lg font-medium">đ {purchaseOverview.refunded}</div>
-                    <div className="text-sm text-gray-500">Hoàn trả</div>
+                    <div className="text-lg font-medium text-black">đ {purchaseOverview.refunded}</div>
+                    <div className="text-sm text-black">Hoàn trả</div>
                   </div>
                 </div>
               </div>
@@ -273,15 +274,15 @@ export default function Dashboard() {
 
             {/* Product Overview */}
             <div className="col-span-4 bg-white rounded-lg p-6 shadow-sm">
-              <h2 className="text-lg font-medium mb-4">Tổng quan sản phẩm</h2>
+              <h2 className="text-lg font-medium mb-4 text-black">Tổng quan sản phẩm</h2>
               <div className="grid grid-cols-2 gap-4">
                 <div className="flex items-center gap-3">
                   <div className="bg-purple-100 p-3 rounded">
                     <i className="fas fa-users text-purple-500"></i>
                   </div>
                   <div>
-                    <div className="text-lg font-medium">{productOverview.suppliers}</div>
-                    <div className="text-sm text-gray-500">Số lượng nhà cung cấp</div>
+                    <div className="text-lg font-medium text-black">{productOverview.suppliers}</div>
+                    <div className="text-sm text-black">Số lượng nhà cung cấp</div>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
@@ -289,8 +290,8 @@ export default function Dashboard() {
                     <i className="fas fa-box-open text-indigo-500"></i>
                   </div>
                   <div>
-                    <div className="text-lg font-medium">{productOverview.products}</div>
-                    <div className="text-sm text-gray-500">Số lượng Mặt hàng</div>
+                    <div className="text-lg font-medium text-black">{productOverview.products}</div>
+                    <div className="text-sm text-black">Số lượng Mặt hàng</div>
                   </div>
                 </div>
               </div>
@@ -299,7 +300,7 @@ export default function Dashboard() {
             {/* Sales & Purchase Chart */}
             <div className="col-span-8 bg-white rounded-lg p-6 shadow-sm">
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-lg font-medium">Bán hàng & Nhập hàng</h2>
+                <h2 className="text-lg font-medium text-black">Bán hàng & Nhập hàng</h2>
                 <select 
                   className="border rounded px-3 py-1"
                   value={selectedPeriod}
@@ -342,7 +343,7 @@ export default function Dashboard() {
 
             {/* Order Overview Chart */}
             <div className="col-span-4 bg-white rounded-lg p-6 shadow-sm">
-              <h2 className="text-lg font-medium mb-6">Tổng quan đơn hàng</h2>
+              <h2 className="text-lg font-medium mb-6 text-black">Tổng quan đơn hàng</h2>
               <div className="h-[300px]">
                 <Line
                   data={orderOverviewData}
@@ -376,14 +377,14 @@ export default function Dashboard() {
             {/* Best Sellers Table */}
             <div className="col-span-6 bg-white rounded-lg p-6 shadow-sm">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-medium">Sản phẩm bán chạy</h2>
+                <h2 className="text-lg font-medium text-black">Sản phẩm bán chạy</h2>
                 <Link href="#" className="text-blue-500 text-sm hover:underline">
                   Xem tất cả
                 </Link>
               </div>
               <table className="w-full">
                 <thead>
-                  <tr className="text-left text-gray-600">
+                  <tr className="text-left text-black">
                     <th className="pb-3">Tên sản phẩm</th>
                     <th className="pb-3">Số lượng đã bán</th>
                     <th className="pb-3">Số lượng còn lại</th>
@@ -393,10 +394,10 @@ export default function Dashboard() {
                 <tbody>
                   {bestSellers.map((product, index) => (
                     <tr key={index} className="border-t">
-                      <td className="py-3">{product.name}</td>
-                      <td className="py-3">{product.sold}</td>
-                      <td className="py-3">{product.remaining}</td>
-                      <td className="py-3">đ {product.price}</td>
+                      <td className="py-3 text-black">{product.name}</td>
+                      <td className="py-3 text-black">{product.sold}</td>
+                      <td className="py-3 text-black">{product.remaining}</td>
+                      <td className="py-3 text-black">đ {product.price}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -406,14 +407,14 @@ export default function Dashboard() {
             {/* Low Stock Products */}
             <div className="col-span-6 bg-white rounded-lg p-6 shadow-sm">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-medium">Sản phẩm sắp hết</h2>
+                <h2 className="text-lg font-medium text-black">Sản phẩm sắp hết</h2>
                 <Link href="#" className="text-blue-500 text-sm hover:underline">
                   Xem tất cả
                 </Link>
               </div>
               <table className="w-full">
                 <thead>
-                  <tr className="text-left text-gray-600">
+                  <tr className="text-left text-black">
                     <th className="pb-3">Tên sản phẩm</th>
                     <th className="pb-3">Số lượng đã bán</th>
                     <th className="pb-3">Số lượng còn lại</th>
@@ -423,10 +424,10 @@ export default function Dashboard() {
                 <tbody>
                   {bestSellers.map((product, index) => (
                     <tr key={index} className="border-t">
-                      <td className="py-3">{product.name}</td>
-                      <td className="py-3">{product.sold}</td>
-                      <td className="py-3">{product.remaining}</td>
-                      <td className="py-3">đ {product.price}</td>
+                      <td className="py-3 text-black">{product.name}</td>
+                      <td className="py-3 text-black">{product.sold}</td>
+                      <td className="py-3 text-black">{product.remaining}</td>
+                      <td className="py-3 text-black">đ {product.price}</td>
                     </tr>
                   ))}
                 </tbody>
