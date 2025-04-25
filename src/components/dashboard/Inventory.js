@@ -36,18 +36,7 @@ export default function Inventory() {
     <div className="relative">
       {/* Thanh tìm kiếm và Tổng quan luôn hiển thị */}
       {/* Thanh tìm kiếm */}
-      <div className="flex items-center justify-between mb-6">
-        <input
-          type="text"
-          placeholder="Tìm sản phẩm, nhà cung cấp, đơn hàng"
-          className="w-1/2 px-4 py-2 border border-gray-300 rounded-md bg-white text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-        <div className="flex gap-2">
-          <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition" onClick={() => setShowModal(true)}>Thêm sản phẩm</button>
-          <button className="px-4 py-2 bg-white border border-gray-300 text-black rounded hover:bg-gray-100 transition">Filters</button>
-          <button className="px-4 py-2 bg-white border border-gray-300 text-black rounded hover:bg-gray-100 transition">Tải xuống</button>
-        </div>
-      </div>
+      
 
       {/* Tổng quan kho */}
       <div className="grid grid-cols-4 gap-4 mb-8">
@@ -80,6 +69,11 @@ export default function Inventory() {
         <div className="bg-white rounded-lg shadow-sm p-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-bold text-black">Danh sách sản phẩm</h2>
+            <div className="flex gap-2">
+              <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition" onClick={() => setShowModal(true)}>Thêm sản phẩm</button>
+              <button className="px-4 py-2 bg-white border border-gray-300 text-black rounded hover:bg-gray-100 transition">Filters</button>
+              <button className="px-4 py-2 bg-white border border-gray-300 text-black rounded hover:bg-gray-100 transition">Tải xuống</button>
+            </div>
           </div>
           <table className="w-full text-left border-t">
             <thead>
@@ -93,7 +87,6 @@ export default function Inventory() {
             </thead>
             <tbody>
               {mockProducts.map((item) => (
-                // Cập nhật onClick
                 <tr key={item.id} className="border-t hover:bg-blue-50 transition cursor-pointer" onClick={() => handleProductClick(item.id)}>
                   <td className="py-3 text-black font-medium flex items-center gap-2">
                     <img src={item.image} alt={item.name} className="w-10 h-10 object-cover rounded" />

@@ -60,17 +60,11 @@ const SupplierView = () => {
 
   return (
     <div className={`p-6 bg-gray-50 min-h-screen ${showModal ? 'opacity-60' : ''}`}>
-      <h1 className="text-2xl font-semibold text-gray-800 mb-6">Nhà cung cấp</h1>
+      
 
       {/* Search Bar with Buttons */}
       <div className="flex items-center justify-between mb-6">
-        <input
-          type="text"
-          placeholder="Tìm sản phẩm, nhà cung cấp, đơn hàng"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-1/2 px-4 py-2 border border-gray-300 rounded-md bg-white text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
+      <h1 className="text-2xl font-semibold text-gray-800 mb-6">Nhà cung cấp</h1>
         <div className="flex gap-2">
           <button
             className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"

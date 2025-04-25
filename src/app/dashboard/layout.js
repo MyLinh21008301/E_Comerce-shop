@@ -74,7 +74,29 @@ export default function DashboardLayout({ children }) {
       {/* Main Content Area */}
       <main className="flex-1 p-6 overflow-auto"> {/* Thêm overflow-auto */}
         {/* Thanh tìm kiếm (nếu có) có thể đặt ở đây */}
-        {/* <div className="mb-4"> Search Bar Component </div> */}
+        <div className="flex items-center justify-between mb-6">
+          <div className="relative w-1/2">
+            <input
+              type="text"
+              placeholder="Tìm sản phẩm, nhà cung cấp, đơn hàng"
+              className="w-full px-10 py-2 border border-gray-300 rounded-md bg-white text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+              <i className="fas fa-search"></i>
+            </span>
+          </div>
+          <div className="flex items-center gap-4">
+            <i className="fas fa-bell text-gray-500 text-lg cursor-pointer"></i>
+            <div className="flex items-center gap-2">
+              <img
+                src="/images/logo.png" // Thay bằng hình đại diện của user
+                alt="User Avatar"
+                className="w-8 h-8 rounded-full object-cover cursor-pointer"
+              />
+              <span className="text-gray-800 font-medium">Tên người dùng</span> {/* Thay bằng tên user đang đăng nhập */}
+            </div>
+          </div>
+        </div>
         {children} {/* Đây là nơi nội dung của page.js sẽ được render */}
       </main>
     </div>
