@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState, useRef } from "react";
 import { mockProducts } from '@/data/mockData';
 import { CATEGORIES } from '@/utils/constants';
