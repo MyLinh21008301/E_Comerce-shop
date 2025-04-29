@@ -21,7 +21,7 @@ export default function DashboardLayout({ children }) {
     { icon: "box", label: "Kho hàng", href: "/dashboard/inventory" },
     { icon: "chart-bar", label: "Báo cáo", href: "/dashboard/report" },
     { icon: "users", label: "Nhà cung cấp", href: "/dashboard/supplier" }, // Cập nhật href
-    { icon: "shopping-cart", label: "Đơn hàng", href: "#" },
+    { icon: "clipboard", label: "Đơn hàng", href: "/dashboard/order" },
     { icon: "store", label: "Quản lý cửa hàng", href: "#" },
     { icon: "cog", label: "Cài đặt", href: "#" },
   ];
