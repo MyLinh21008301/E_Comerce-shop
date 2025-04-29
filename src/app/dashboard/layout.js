@@ -45,10 +45,10 @@ export default function DashboardLayout({ children }) {
             <Link
               key={index}
               href={item.href}
-              className={`w-full text-left flex items-center gap-3 px-6 py-3 text-gray-700 hover:bg-gray-50 hover:text-[#ee4d2d] transition-colors ${
-                // Highlight based on current pathname. Handle base /dashboard case.
-                (pathname === item.href || (item.href === "/dashboard" && pathname === "/dashboard")) // Simplified active check
-                ? 'text-[#ee4d2d] bg-gray-50 font-semibold' : ''
+              className={`w-full text-left flex items-center gap-3 px-6 py-3 transition-colors ${
+                pathname === item.href
+                  ? 'text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-orange-600 font-semibold'
+                  : 'text-gray-700 hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-orange-300 hover:to-orange-500'
               }`}
             >
               {/* Thay thế bằng component Icon nếu có */}
