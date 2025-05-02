@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 
 export default function OrderView() {
   const [showModal, setShowModal] = useState(false);
+  const [showaddModal, setShowaddModal] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState({});
 
   const handleOrderClick = (order) => {
@@ -50,14 +51,14 @@ export default function OrderView() {
 
       {/* Nút Add Order và Order History */}
       <div className="flex justify-end gap-2 mb-4">
-        <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
-          Add Order
+        <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition" onClick={() => setShowaddModal(true)}>
+          Thêm đơn đặt hàng
         </button>
         <button className="px-4 py-2 bg-white border border-gray-300 text-black rounded hover:bg-gray-100 transition">
-          Order History
+          Lịch sử đặt hàng
         </button>
         <button className="px-4 py-2 bg-white border border-gray-300 text-black rounded hover:bg-gray-100 transition">
-          Filters
+          Lọc
         </button>
       </div>
 
@@ -102,14 +103,87 @@ export default function OrderView() {
           </tbody>
         </table>
       </div>
+      {/* Add Order Modal */}
+      {showaddModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-[3px] bg-white/40 transition-all">
+          <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
+            <h2 className="text-xl font-semibold text-black mb-4">Thêm đơn hàng</h2>
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-black">Sản phẩm</label>
+              <input
+                type="text"
+                onChange={(e) => setSelectedOrder({ ...selectedOrder, product: e.target.value })}
+                className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-black">Order Value</label>
+              <input
+                type="text"
+                onChange={(e) => setSelectedOrder({ ...selectedOrder, value: e.target.value })}
+                className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-black">Số lượng</label>
+              <input
+                type="text"
+                onChange={(e) => setSelectedOrder({ ...selectedOrder, quantity: e.target.value })}
+                className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-black">Order ID</label>
+              <input
+                type="text"
+                readOnly
+                className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm bg-gray-100 sm:text-sm"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-black">Expected Delivery</label>
+              <input
+                type="text"
+                onChange={(e) => setSelectedOrder({ ...selectedOrder, delivery: e.target.value })}
+                className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-black">Trạng thái</label>
+              <select
+                onChange={(e) => setSelectedOrder({ ...selectedOrder, status: e.target.value })}
+                className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              >
+                <option value="Delayed">Delayed</option>
+                <option value="Confirmed">Confirmed</option>
+                <option value="Returned">Returned</option>
+              </select>
+            </div>
+            <div className="flex justify-end gap-2">
+              <button
+                onClick={() => setShowaddModal(false)}
+                className="px-4 py-2 bg-gray-300 text-black rounded hover:bg-gray-400 transition"
+              >
+                Hủy
+              </button>
+              <button
+                onClick={handleUpdateOrder}
+                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+              >
+                Thêm
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Modal */}
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-[3px] bg-white/40 transition-all">
           <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
-            <h2 className="text-xl font-semibold text-gray-800 mb-4">Cập nhật đơn hàng</h2>
+            <h2 className="text-xl font-semibold text-black mb-4">Cập nhật đơn hàng</h2>
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700">Sản phẩm</label>
+              <label className="block text-sm font-medium text-black">Sản phẩm</label>
               <input
                 type="text"
                 value={selectedOrder.product}
@@ -118,7 +192,7 @@ export default function OrderView() {
               />
             </div>
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700">Order Value</label>
+              <label className="block text-sm font-medium text-black">Order Value</label>
               <input
                 type="text"
                 value={selectedOrder.value}
@@ -127,7 +201,7 @@ export default function OrderView() {
               />
             </div>
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700">Số lượng</label>
+              <label className="block text-sm font-medium text-black">Số lượng</label>
               <input
                 type="text"
                 value={selectedOrder.quantity}
@@ -136,7 +210,7 @@ export default function OrderView() {
               />
             </div>
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700">Order ID</label>
+              <label className="block text-sm font-medium text-black">Order ID</label>
               <input
                 type="text"
                 value={selectedOrder.id}
@@ -145,7 +219,7 @@ export default function OrderView() {
               />
             </div>
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700">Expected Delivery</label>
+              <label className="block text-sm font-medium text-black">Expected Delivery</label>
               <input
                 type="text"
                 value={selectedOrder.delivery}
@@ -154,7 +228,7 @@ export default function OrderView() {
               />
             </div>
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700">Trạng thái</label>
+              <label className="block text-sm font-medium text-black">Trạng thái</label>
               <select
                 value={selectedOrder.status}
                 onChange={(e) => setSelectedOrder({ ...selectedOrder, status: e.target.value })}
