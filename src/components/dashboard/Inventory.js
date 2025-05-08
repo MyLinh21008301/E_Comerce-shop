@@ -122,48 +122,15 @@ export default function Inventory() {
           {/* Overlay blur, không tối màu */}
           <div className="fixed inset-0 z-40 backdrop-blur-[3px] bg-white/40 transition-all"></div>
           <div className="fixed inset-0 z-50 flex items-center justify-center">
-            <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-xl border border-gray-100">
-              <h2 className="text-2xl font-semibold text-black mb-8 text-left">Sản phẩm mới</h2>
+            <div className="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-[26rem] border border-gray-100">
+              <h2 className="text-xl font-semibold text-black mb-6 text-left">Sản phẩm mới</h2>
               <form>
-                <div className="grid grid-cols-1 gap-4">
-                  <div>
-                    <label className="block text-black text-sm mb-1">Tên sản phẩm</label>
-                    <input className="w-full border border-gray-300 rounded px-3 py-2 text-black bg-gray-50" placeholder="Nhập tên sản phẩm" />
-                  </div>
-                  <div>
-                    <label className="block text-black text-sm mb-1">Mã sản phẩm</label>
-                    <input className="w-full border border-gray-300 rounded px-3 py-2 text-black bg-gray-50" placeholder="Nhập mã sản phẩm" />
-                  </div>
-                  <div>
-                    <label className="block text-black text-sm mb-1">Loại sản phẩm</label>
-                    <select className="w-full border border-gray-300 rounded px-3 py-2 text-black bg-gray-50">
-                      <option>Chọn loại sản phẩm</option>
-                      {CATEGORIES.map(c => (
-                        <option key={c.id} value={c.name}>{c.name}</option>
-                      ))}
-                    </select>
-                  </div>
-                  <div>
-                    <label className="block text-black text-sm mb-1">Giá nhập</label>
-                    <input className="w-full border border-gray-300 rounded px-3 py-2 text-black bg-gray-50" placeholder="Nhập giá nhập" />
-                  </div>
-                  <div>
-                    <label className="block text-black text-sm mb-1">Số lượng</label>
-                    <input className="w-full border border-gray-300 rounded px-3 py-2 text-black bg-gray-50" placeholder="Nhập số lượng" />
-                  </div>
-                  <div>
-                    <label className="block text-black text-sm mb-1">Hạn sử dụng</label>
-                    <input className="w-full border border-gray-300 rounded px-3 py-2 text-black bg-gray-50" placeholder="Nhập hạn sử dụng" />
-                  </div>
-                  <div>
-                    <label className="block text-black text-sm mb-1">Giá trị giới hạn</label>
-                    <input className="w-full border border-gray-300 rounded px-3 py-2 text-black bg-gray-50" placeholder="Nhập giá trị giới hạn" />
-                  </div>
-                  {/* Ảnh sản phẩm ở dưới cùng */}
-                  <div className="flex flex-col items-center mt-2">
+                <div className="grid grid-cols-2 gap-4">
+                  {/* Phần ảnh sản phẩm */}
+                  <div className="flex flex-col items-center">
                     <label className="block text-black text-sm mb-1 w-full text-left">Ảnh sản phẩm</label>
                     <div
-                      className="w-24 h-24 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center cursor-pointer bg-gray-50 mb-2"
+                      className="w-32 h-32 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center cursor-pointer bg-gray-50 mb-2"
                       onClick={() => fileInputRef.current.click()}
                     >
                       {image ? (
@@ -180,10 +147,47 @@ export default function Inventory() {
                       />
                     </div>
                   </div>
+
+                  {/* Phần điền thông tin */}
+                  <div className="grid grid-cols-1 gap-3">
+                    <div>
+                      <label className="block text-black text-sm mb-1">Tên sản phẩm</label>
+                      <input className="w-full border border-gray-300 rounded px-2 py-1 text-black bg-gray-50" placeholder="Nhập tên sản phẩm" />
+                    </div>
+                    <div>
+                      <label className="block text-black text-sm mb-1">Mã sản phẩm</label>
+                      <input className="w-full border border-gray-300 rounded px-2 py-1 text-black bg-gray-50" placeholder="Nhập mã sản phẩm" />
+                    </div>
+                    <div>
+                      <label className="block text-black text-sm mb-1">Loại sản phẩm</label>
+                      <select className="w-full border border-gray-300 rounded px-2 py-1 text-black bg-gray-50">
+                        <option>Chọn loại sản phẩm</option>
+                        {CATEGORIES.map(c => (
+                          <option key={c.id} value={c.name}>{c.name}</option>
+                        ))}
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-black text-sm mb-1">Giá nhập</label>
+                      <input className="w-full border border-gray-300 rounded px-2 py-1 text-black bg-gray-50" placeholder="Nhập giá nhập" />
+                    </div>
+                    <div>
+                      <label className="block text-black text-sm mb-1">Số lượng</label>
+                      <input className="w-full border border-gray-300 rounded px-2 py-1 text-black bg-gray-50" placeholder="Nhập số lượng" />
+                    </div>
+                    <div>
+                      <label className="block text-black text-sm mb-1">Hạn sử dụng</label>
+                      <input className="w-full border border-gray-300 rounded px-2 py-1 text-black bg-gray-50" placeholder="Nhập hạn sử dụng" />
+                    </div>
+                    <div>
+                      <label className="block text-black text-sm mb-1">Giá trị giới hạn</label>
+                      <input className="w-full border border-gray-300 rounded px-2 py-1 text-black bg-gray-50" placeholder="Nhập giá trị giới hạn" />
+                    </div>
+                  </div>
                 </div>
-                <div className="flex justify-end gap-2 mt-8">
-                  <button type="button" className="px-5 py-2 rounded border border-gray-300 bg-white text-black hover:bg-gray-100" onClick={() => setShowModal(false)}>Hủy</button>
-                  <button type="submit" className="px-5 py-2 rounded bg-blue-600 text-white hover:bg-blue-700">Thêm sản phẩm</button>
+                <div className="flex justify-end gap-2 mt-6">
+                  <button type="button" className="px-4 py-1 rounded border border-gray-300 bg-white text-black hover:bg-gray-100" onClick={() => setShowModal(false)}>Hủy</button>
+                  <button type="submit" className="px-4 py-1 rounded bg-blue-600 text-white hover:bg-blue-700">Thêm sản phẩm</button>
                 </div>
               </form>
             </div>

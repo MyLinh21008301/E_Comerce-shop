@@ -20,7 +20,13 @@ export default function DashboardLayout({ children }) {
     { icon: "home", label: "Trang chủ", href: "/dashboard" },
     { icon: "box", label: "Kho hàng", href: "/dashboard/inventory" },
     { icon: "users", label: "Nhà cung cấp", href: "/dashboard/supplier" }, // Cập nhật href
+<<<<<<< HEAD
     { icon: "shopping-cart", label: "Đơn hàng", href: "#" },
+=======
+    { icon: "clipboard", label: "Đơn hàng", href: "/dashboard/order" },
+    { icon: "store", label: "Quản lý cửa hàng", href: "#" },
+    { icon: "cog", label: "Cài đặt", href: "#" },
+>>>>>>> e15dc19267270345b92b5610f2631b43158065d8
   ];
 
   return (
@@ -42,10 +48,10 @@ export default function DashboardLayout({ children }) {
             <Link
               key={index}
               href={item.href}
-              className={`w-full text-left flex items-center gap-3 px-6 py-3 text-gray-700 hover:bg-gray-50 hover:text-[#ee4d2d] transition-colors ${
-                // Highlight based on current pathname. Handle base /dashboard case.
-                (pathname === item.href || (item.href === "/dashboard" && pathname === "/dashboard")) // Simplified active check
-                ? 'text-[#ee4d2d] bg-gray-50 font-semibold' : ''
+              className={`w-full text-left flex items-center gap-3 px-6 py-3 transition-colors ${
+                pathname === item.href
+                  ? 'text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-orange-600 font-semibold'
+                  : 'text-gray-700 hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-orange-300 hover:to-orange-500'
               }`}
             >
               {/* Thay thế bằng component Icon nếu có */}
