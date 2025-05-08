@@ -70,8 +70,6 @@ export default function ProductDetailView({ productId, onBack }) {
                   <div className="text-black">{product.id}</div>
                   <div className="text-gray-500">Loại sản phẩm</div>
                   <div className="text-black">{CATEGORIES.find(c => product.name.toLowerCase().includes(c.name.toLowerCase()))?.name || 'Khác'}</div>
-                  <div className="text-gray-500">Hạn sử dụng</div>
-                  <div className="text-black">--</div>
                   <div className="text-gray-500">Giá trị giới hạn</div>
                   <div className="text-black">12</div>
                 </div>
@@ -89,10 +87,19 @@ export default function ProductDetailView({ productId, onBack }) {
             </div>
             {/* Cột ảnh và số liệu */}
             <div className="col-span-1">
-              {/* Ảnh sản phẩm */}
-              <div className="flex justify-center mb-6">
-                <div className="border-2 border-dashed border-gray-300 rounded p-1 w-[160px] h-[160px]">
-                  <img src={product.image} alt={product.name} className="w-full h-full object-cover rounded" />
+              {/* Media Gallery */}
+              <div className="mb-8">
+                <h3 className="text-black font-semibold mb-4 text-base">Thư viện hình ảnh và video</h3>
+                <div className="grid grid-cols-3 gap-4">
+                  {[...Array(9)].map((_, index) => (
+                    <div key={index} className="border-2 border-dashed border-gray-300 rounded p-1">
+                      <img
+                        src={`https://picsum.photos/400/400?random=${index + 1}`}
+                        alt={`Sample ${index + 1}`}
+                        className="w-full h-full object-cover rounded"
+                      />
+                    </div>
+                  ))}
                 </div>
               </div>
               {/* Số liệu kho */}
