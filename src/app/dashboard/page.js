@@ -2,8 +2,6 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-// Remove useRouter and usePathname if no longer needed here
-// import { useRouter, usePathname } from 'next/navigation'; 
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -15,11 +13,8 @@ import {
   Tooltip,
   Legend
 } from 'chart.js';
-import { Bar, Line } from 'react-chartjs-2';
-// Remove Image import if logo is only in layout
-// import Image from 'next/image';
+import { Bar } from 'react-chartjs-2';
 
-// ChartJS registration remains
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -31,16 +26,9 @@ ChartJS.register(
   Legend
 );
 
-// This page now only renders the main content for the dashboard home
-export default function DashboardHomePage() { 
-  const [selectedPeriod, setSelectedPeriod] = useState('Weekly');
-
-  // Keep only the data needed for this specific page's content
+export default function DashboardHomePage() {
   const businessOverview = {
-    sales: 832,
     revenue: 18300,
-    profit: 868,
-    expenses: 17432,
   };
 
   const inventoryOverview = {
@@ -48,105 +36,33 @@ export default function DashboardHomePage() {
     delivered: 200,
   };
 
-  const purchaseOverview = {
-    purchase_orders: 82,
-    expenses: 13573,
-    cancelled: 5,
-    refunded: 17432,
+  const voucherOverview = {
+    total_vouchers: 50,
   };
 
-  const productOverview = {
-    suppliers: 31,
-    products: 21,
-  };
-
-  const salesPurchaseData = {
-    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
+  const salesData = {
+    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
     datasets: [
       {
-        label: 'Nhập hàng',
-        data: [50000, 55000, 45000, 35000, 45000, 30000, 55000, 45000, 42000, 35000],
-        backgroundColor: 'rgba(53, 162, 235, 0.5)',
-      },
-      {
-        label: 'Bán hàng',
-        data: [48000, 47000, 52000, 42000, 43000, 40000, 47000, 42000, 43000, 42000],
+        label: 'Số lượng sản phẩm bán ra',
+        data: [480, 470, 520, 420, 430, 400, 470, 420, 430, 420, 450, 460],
         backgroundColor: 'rgba(75, 192, 192, 0.5)',
       },
     ],
   };
 
-  const orderOverviewData = {
-    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
-    datasets: [
-      {
-        label: 'Đã giao hàng',
-        data: [3500, 2800, 3600, 2900, 3200],
-        borderColor: 'rgb(53, 162, 235)',
-        backgroundColor: 'rgba(53, 162, 235, 0.5)',
-        tension: 0.4,
-      },
-      {
-        label: 'Đã đặt',
-        data: [3800, 1800, 2500, 1900, 2200],
-        borderColor: 'rgb(255, 159, 64)',
-        backgroundColor: 'rgba(255, 159, 64, 0.5)',
-        tension: 0.4,
-      },
-    ],
-  };
-
-  const bestSellers = [
-    { name: 'Surf Excel', sold: 30, remaining: 12, price: 100 },
-    { name: 'Rin', sold: 21, remaining: 15, price: 207 },
-    { name: 'Parle G', sold: 19, remaining: 17, price: 105 },
-  ];
-
-  // Remove the outer div with flex and the Sidebar div
   return (
-    // The content previously inside the <div className="flex-1 p-6"> 
-    // No need for the conditional rendering based on activeTab anymore
     <div className="grid grid-cols-12 gap-6">
-      {/* Business Overview */}
-      <div className="col-span-8 bg-white rounded-lg p-6 shadow-sm">
-        <h2 className="text-lg font-medium mb-4 text-black">Tổng quan kinh doanh</h2>
-        <div className="grid grid-cols-4 gap-4">
-          {/* ... existing business overview items ... */}
-          <div className="flex items-center gap-3">
-            <div className="bg-blue-100 p-3 rounded">
-              <i className="fas fa-shopping-bag text-blue-500"></i>
-            </div>
-            <div>
-              <div className="text-lg font-medium text-blue-600">đ {businessOverview.sales}</div>
-              <div className="text-sm text-black">Sales</div>
-            </div>
+      {/* Revenue Overview */}
+      <div className="col-span-4 bg-white rounded-lg p-6 shadow-sm">
+        <h2 className="text-lg font-medium mb-4 text-black">Doanh thu</h2>
+        <div className="flex items-center gap-3">
+          <div className="bg-purple-100 p-3 rounded">
+            <i className="fas fa-chart-line text-purple-500"></i>
           </div>
-          <div className="flex items-center gap-3">
-            <div className="bg-purple-100 p-3 rounded">
-              <i className="fas fa-chart-line text-purple-500"></i>
-            </div>
-            <div>
-              <div className="text-lg font-medium text-green-600">đ {businessOverview.revenue}</div>
-              <div className="text-sm text-black">Doanh thu</div>
-            </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <div className="bg-green-100 p-3 rounded">
-              <i className="fas fa-dollar-sign text-green-500"></i>
-            </div>
-            <div>
-              <div className="text-lg font-medium text-red-600">đ {businessOverview.profit}</div>
-              <div className="text-sm text-black">Lợi nhuận</div>
-            </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <div className="bg-yellow-100 p-3 rounded">
-              <i className="fas fa-wallet text-yellow-500"></i>
-            </div>
-            <div>
-              <div className="text-lg font-medium text-yellow-600">đ {businessOverview.expenses}</div>
-              <div className="text-sm text-black">Chi phí</div>
-            </div>
+          <div>
+            <div className="text-lg font-medium text-green-600">đ {businessOverview.revenue}</div>
+            <div className="text-sm text-black">Tổng doanh thu</div>
           </div>
         </div>
       </div>
@@ -155,7 +71,6 @@ export default function DashboardHomePage() {
       <div className="col-span-4 bg-white rounded-lg p-6 shadow-sm">
         <h2 className="text-lg font-medium mb-4 text-black">Tổng quan kho hàng</h2>
         <div className="grid grid-cols-2 gap-4">
-          {/* ... existing inventory overview items ... */}
           <div className="flex items-center gap-3">
             <div className="bg-orange-100 p-3 rounded">
               <i className="fas fa-box text-orange-500"></i>
@@ -177,93 +92,26 @@ export default function DashboardHomePage() {
         </div>
       </div>
 
-      {/* Purchase Overview */}
-      <div className="col-span-8 bg-white rounded-lg p-6 shadow-sm">
-        <h2 className="text-lg font-medium mb-4 text-black">Tổng quan nhập hàng</h2>
-        <div className="grid grid-cols-4 gap-4">
-          {/* ... existing purchase overview items ... */}
-          <div className="flex items-center gap-3">
-            <div className="bg-blue-100 p-3 rounded">
-              <i className="fas fa-shopping-cart text-blue-500"></i>
-            </div>
-            <div>
-              <div className="text-lg font-medium text-black">{purchaseOverview.purchase_orders}</div>
-              <div className="text-sm text-black">Đã nhập</div>
-            </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <div className="bg-green-100 p-3 rounded">
-              <i className="fas fa-money-bill text-green-500"></i>
-            </div>
-            <div>
-              <div className="text-lg font-medium text-black">đ {purchaseOverview.expenses}</div>
-              <div className="text-sm text-black">Chi phí</div>
-            </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <div className="bg-red-100 p-3 rounded">
-              <i className="fas fa-times-circle text-red-500"></i>
-            </div>
-            <div>
-              <div className="text-lg font-medium text-black">{purchaseOverview.cancelled}</div>
-              <div className="text-sm text-black">Đã hủy</div>
-            </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <div className="bg-yellow-100 p-3 rounded">
-              <i className="fas fa-undo text-yellow-500"></i>
-            </div>
-            <div>
-              <div className="text-lg font-medium text-black">đ {purchaseOverview.refunded}</div>
-              <div className="text-sm text-black">Hoàn trả</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Product Overview */}
+      {/* Voucher Overview */}
       <div className="col-span-4 bg-white rounded-lg p-6 shadow-sm">
-        <h2 className="text-lg font-medium mb-4 text-black">Tổng quan sản phẩm</h2>
-        <div className="grid grid-cols-2 gap-4">
-          {/* ... existing product overview items ... */}
-          <div className="flex items-center gap-3">
-            <div className="bg-purple-100 p-3 rounded">
-              <i className="fas fa-users text-purple-500"></i>
-            </div>
-            <div>
-              <div className="text-lg font-medium text-black">{productOverview.suppliers}</div>
-              <div className="text-sm text-black">Số lượng nhà cung cấp</div>
-            </div>
+        <h2 className="text-lg font-medium mb-4 text-black">Tổng quan voucher</h2>
+        <div className="flex items-center gap-3">
+          <div className="bg-blue-100 p-3 rounded">
+            <i className="fas fa-ticket-alt text-blue-500"></i>
           </div>
-          <div className="flex items-center gap-3">
-            <div className="bg-indigo-100 p-3 rounded">
-              <i className="fas fa-box-open text-indigo-500"></i>
-            </div>
-            <div>
-              <div className="text-lg font-medium text-black">{productOverview.products}</div>
-              <div className="text-sm text-black">Số lượng Mặt hàng</div>
-            </div>
+          <div>
+            <div className="text-lg font-medium text-black">{voucherOverview.total_vouchers}</div>
+            <div className="text-sm text-black">Số lượng voucher hiện có</div>
           </div>
         </div>
       </div>
 
-      {/* Sales & Purchase Chart */}
-      <div className="col-span-8 bg-white rounded-lg p-6 shadow-sm">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-lg font-medium text-black">Bán hàng & Nhập hàng</h2>
-          <select 
-            className="border rounded px-3 py-1"
-            value={selectedPeriod}
-            onChange={(e) => setSelectedPeriod(e.target.value)}
-          >
-            <option value="Weekly">Weekly</option>
-            <option value="Monthly">Monthly</option>
-            <option value="Yearly">Yearly</option>
-          </select>
-        </div>
+      {/* Sales Chart */}
+      <div className="col-span-12 bg-white rounded-lg p-6 shadow-sm">
+        <h2 className="text-lg font-medium mb-4 text-black">Số lượng sản phẩm bán ra trong năm</h2>
         <div className="h-[300px]">
           <Bar
-            data={salesPurchaseData}
+            data={salesData}
             options={{
               responsive: true,
               maintainAspectRatio: false,
@@ -289,101 +137,6 @@ export default function DashboardHomePage() {
             }}
           />
         </div>
-      </div>
-
-      {/* Order Overview Chart */}
-      <div className="col-span-4 bg-white rounded-lg p-6 shadow-sm">
-        <h2 className="text-lg font-medium mb-6 text-black">Tổng quan đơn hàng</h2>
-        <div className="h-[300px]">
-          <Line
-            data={orderOverviewData}
-            options={{
-              responsive: true,
-              maintainAspectRatio: false,
-              scales: {
-                y: {
-                  beginAtZero: true,
-                  grid: {
-                    display: true,
-                    color: 'rgba(0, 0, 0, 0.1)',
-                  },
-                },
-                x: {
-                  grid: {
-                    display: false,
-                  },
-                },
-              },
-              plugins: {
-                legend: {
-                  position: 'bottom',
-                },
-              },
-            }}
-          />
-        </div>
-      </div>
-
-      {/* Best Sellers Table */}
-      <div className="col-span-6 bg-white rounded-lg p-6 shadow-sm">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-medium text-black">Sản phẩm bán chạy</h2>
-          <Link href="#" className="text-blue-500 text-sm hover:underline">
-            Xem tất cả
-          </Link>
-        </div>
-        <table className="w-full">
-          {/* ... existing best sellers table content ... */}
-           <thead>
-                  <tr className="text-left text-black">
-                    <th className="pb-3">Tên sản phẩm</th>
-                    <th className="pb-3">Số lượng đã bán</th>
-                    <th className="pb-3">Số lượng còn lại</th>
-                    <th className="pb-3">Giá</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {bestSellers.map((product, index) => (
-                    <tr key={index} className="border-t">
-                      <td className="py-3 text-black">{product.name}</td>
-                      <td className="py-3 text-black">{product.sold}</td>
-                      <td className="py-3 text-black">{product.remaining}</td>
-                      <td className="py-3 text-black">đ {product.price}</td>
-                    </tr>
-                  ))}
-                </tbody>
-        </table>
-      </div>
-
-      {/* Low Stock Products */}
-      <div className="col-span-6 bg-white rounded-lg p-6 shadow-sm">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-medium text-black">Sản phẩm sắp hết</h2>
-          <Link href="#" className="text-blue-500 text-sm hover:underline">
-            Xem tất cả
-          </Link>
-        </div>
-        <table className="w-full">
-          {/* ... existing low stock table content ... */}
-           <thead>
-                  <tr className="text-left text-black">
-                    <th className="pb-3">Tên sản phẩm</th>
-                    <th className="pb-3">Số lượng đã bán</th>
-                    <th className="pb-3">Số lượng còn lại</th>
-                    <th className="pb-3">Giá</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {bestSellers.map((product, index) => (
-                    <tr key={index} className="border-t">
-                      <td className="py-3 text-black">{product.name}</td>
-                      <td className="py-3 text-black">{product.sold}</td>
-                      <td className="py-3 text-black">{product.remaining}</td>
-                      <td className="py-3 text-black">đ {product.price}</td>
-                    </tr>
-                  ))}
-                </tbody>
-        </table>
       </div>
     </div>
   );
