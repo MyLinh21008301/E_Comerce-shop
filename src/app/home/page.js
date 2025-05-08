@@ -17,31 +17,31 @@ export default function HomePage() {
       <div className="bg-white shadow-md">
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-center text-gray-700 text-sm py-2">
-            <div className="flex gap-4">
+            <div className="flex gap-6 items-center">
               <Link href="/dashboard" className="hover:text-blue-500">Kênh Người Bán</Link>
-              <Link href="/dashboard" className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">
+              <Link href="/dashboard" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
                 Dashboard
               </Link>
               <a href="#" className="hover:text-blue-500">Tải ứng dụng</a>
               <a href="#" className="hover:text-blue-500">Kết nối</a>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-3">
                 <a href="#" className="hover:text-blue-500"><FaFacebook size={16} /></a>
                 <a href="#" className="hover:text-blue-500"><FaInstagram size={16} /></a>
                 <a href="#" className="hover:text-blue-500"><FaTwitter size={16} /></a>
               </div>
             </div>
-            <div className="flex gap-4 items-center">
-              <a href="#" className="hover:text-blue-500 flex items-center gap-1">
+            <div className="flex gap-6 items-center">
+              <a href="#" className="hover:text-blue-500 flex items-center gap-2">
                 <FaBell size={16} />
                 Thông Báo
               </a>
-              <a href="#" className="hover:text-blue-500 flex items-center gap-1">
+              <a href="#" className="hover:text-blue-500 flex items-center gap-2">
                 <FaQuestionCircle size={16} />
                 Hỗ Trợ
               </a>
               <a href="#" className="hover:text-blue-500">Tiếng Việt</a>
               {user ? (
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-3">
                   <span className="hover:text-blue-500">{user.name}</span>
                   <button 
                     onClick={logout}
@@ -51,7 +51,7 @@ export default function HomePage() {
                   </button>
                 </div>
               ) : (
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-3">
                   <Link href="/register" className="hover:text-blue-500">Đăng Ký</Link>
                   <span>|</span>
                   <Link href="/login" className="hover:text-blue-500">Đăng Nhập</Link>
@@ -65,7 +65,7 @@ export default function HomePage() {
       {/* Search Header */}
       <div className="bg-gray-100 pb-4">
         <div className="container mx-auto px-4">
-          <div className="flex items-center gap-8 py-4">
+          <div className="flex items-center gap-10 py-4">
             <Link href="/" className="text-gray-700 text-3xl font-bold">
               <img src="/images/logo.png" alt="Logo" className="h-12" />
             </Link>
@@ -74,9 +74,9 @@ export default function HomePage() {
                 <input
                   type="text"
                   placeholder="Tìm sản phẩm, thương hiệu và tên shop"
-                  className="w-full px-4 py-2 rounded-l-sm text-sm bg-white text-gray-700 placeholder-gray-400 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-4 py-2 rounded-l-md text-sm bg-white text-gray-700 placeholder-gray-400 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
-                <button className="bg-blue-500 text-white px-6 py-2 rounded-r-sm hover:bg-blue-600">
+                <button className="bg-blue-500 text-white px-6 py-2 rounded-r-md hover:bg-blue-600">
                   <FaSearch size={16} />
                 </button>
               </div>
