@@ -93,16 +93,16 @@ export default function HomePage() {
       <div className="bg-white border-b">
         <div className="container mx-auto px-4">
           <div className="flex gap-4 text-sm py-2">
-            <a href="#" className="hover:text-blue-500">Ốp Lưng iPhone</a>
-            <a href="#" className="hover:text-blue-500">Đẹp Nữ</a>
-            <a href="#" className="hover:text-blue-500">Kẹp Tóc</a>
-            <a href="#" className="hover:text-blue-500">Quạt Cầm Tay</a>
-            <a href="#" className="hover:text-blue-500">Áo Phông Nữ</a>
-            <a href="#" className="hover:text-blue-500">Túi Xách Nữ</a>
-            <a href="#" className="hover:text-blue-500">Áo</a>
-            <a href="#" className="hover:text-blue-500">Kem Chống Nắng</a>
-            <a href="#" className="hover:text-blue-500">Dép Nam</a>
-            <a href="#" className="hover:text-blue-500">Quần Đùi Nữ</a>
+            <a href="#" className="text-black hover:text-blue-500">Ốp Lưng iPhone</a>
+            <a href="#" className="text-black hover:text-blue-500">Đẹp Nữ</a>
+            <a href="#" className="text-black hover:text-blue-500">Kẹp Tóc</a>
+            <a href="#" className="text-black hover:text-blue-500">Quạt Cầm Tay</a>
+            <a href="#" className="text-black hover:text-blue-500">Áo Phông Nữ</a>
+            <a href="#" className="text-black hover:text-blue-500">Túi Xách Nữ</a>
+            <a href="#" className="text-black hover:text-blue-500">Áo</a>
+            <a href="#" className="text-black hover:text-blue-500">Kem Chống Nắng</a>
+            <a href="#" className="text-black hover:text-blue-500">Dép Nam</a>
+            <a href="#" className="text-black hover:text-blue-500">Quần Đùi Nữ</a>
           </div>
         </div>
       </div>
