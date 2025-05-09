@@ -214,4 +214,32 @@ export const getProducts = (page = 1, limit = 24) => {
 // Hàm lấy chi tiết một sản phẩm
 export const getProduct = (id) => {
   return mockProducts.find(p => p.id === parseInt(id)) || null;
-}; 
+};
+
+export const mockConversations = [
+  {
+    id: 1,
+    avatar: 'https://avatar.iran.liara.run/public',
+    name: 'Nguyễn Văn Sơn',
+  },
+  {
+    id: 2,
+    avatar: 'https://avatar.iran.liara.run/public',
+    name: 'Trần Thị Bích Nhung',
+  },
+  {
+    id: 3,
+    avatar: 'https://avatar.iran.liara.run/public',
+    name: 'Lê Văn Hoàng',
+  },
+  {
+    id: 4,
+    avatar: 'https://avatar.iran.liara.run/public',
+    name: 'Phạm Thị Thanh',
+  },
+  {
+    id: 5,
+    avatar: 'https://avatar.iran.liara.run/public',
+    name: 'Hoàng Văn Tiến',
+  },
+];

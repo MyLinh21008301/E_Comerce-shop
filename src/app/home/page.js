@@ -7,6 +7,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import Link from 'next/link';
 import { FaFacebook, FaInstagram, FaTwitter, FaLinkedin, FaShoppingCart, FaBell, FaQuestionCircle, FaSearch, FaCcVisa, FaCcMastercard, FaCcJcb, FaCcPaypal, FaGooglePay, FaApplePay, FaComments } from 'react-icons/fa';
 import { useState } from 'react';
+import { mockConversations } from '@/data/mockData';
 
 export default function HomePage() {
   const { user, logout } = useAuth();
@@ -106,12 +107,19 @@ export default function HomePage() {
 
       {/* Chat Popup */}
       {isChatPopupVisible && (
-        <div className="absolute top-30 right-4 bg-white shadow-lg rounded-lg w-80 p-4 z-50">
+        <div className="absolute top-20 right-4 bg-white shadow-lg rounded-lg w-80 p-4 z-50">
           <h3 className="text-lg font-medium text-black mb-4">Danh sách cuộc trò chuyện</h3>
           <ul className="space-y-2">
-            <li className="p-2 border-b hover:bg-gray-100 cursor-pointer">Cuộc trò chuyện 1</li>
-            <li className="p-2 border-b hover:bg-gray-100 cursor-pointer">Cuộc trò chuyện 2</li>
-            <li className="p-2 border-b hover:bg-gray-100 cursor-pointer">Cuộc trò chuyện 3</li>
+            {mockConversations.map((conversation) => (
+              <li key={conversation.id} className="flex items-center gap-3 p-2 border-b hover:bg-gray-100 cursor-pointer">
+                <img
+                  src={conversation.avatar}
+                  alt={conversation.name}
+                  className="w-10 h-10 rounded-full object-cover"
+                />
+                <span className="text-black font-medium">{conversation.name}</span>
+              </li>
+            ))}
           </ul>
           <button
             onClick={toggleChatPopup}
