@@ -6,10 +6,16 @@ import { ProductCard } from '@/components/product/ProductCard';
 import InfiniteScroll from "react-infinite-scroll-component";
 import Link from 'next/link';
 import { FaFacebook, FaInstagram, FaTwitter, FaLinkedin, FaShoppingCart, FaBell, FaQuestionCircle, FaSearch, FaCcVisa, FaCcMastercard, FaCcJcb, FaCcPaypal, FaGooglePay, FaApplePay, FaComments } from 'react-icons/fa';
+import { useState } from 'react';
 
 export default function HomePage() {
   const { user, logout } = useAuth();
   const { products, hasMore, loadMoreProducts, loading } = useProducts();
+  const [isChatPopupVisible, setChatPopupVisible] = useState(false);
+
+  const toggleChatPopup = () => {
+    setChatPopupVisible(!isChatPopupVisible);
+  };
 
   return (
     <div className="bg-gray-100 min-h-screen">
@@ -83,16 +89,38 @@ export default function HomePage() {
             </div>
             <div className="text-gray-700 text-2xl relative flex items-center gap-4">
               <div className="relative">
-                <FaShoppingCart size={24} />
+                <FaShoppingCart size={24} className="cursor-pointer text-gray-700 hover:text-blue-500" />
                 <span className="absolute -top-2 -right-2 bg-blue-500 text-white rounded-full text-xs w-5 h-5 flex items-center justify-center">0</span>
               </div>
               <div className="relative">
-                <FaComments size={24} className="cursor-pointer text-gray-700 hover:text-blue-500" />
+                <FaComments
+                  size={24}
+                  className="cursor-pointer text-gray-700 hover:text-blue-500"
+                  onClick={toggleChatPopup}
+                />
               </div>
             </div>
           </div>
         </div>
       </div>
+
+      {/* Chat Popup */}
+      {isChatPopupVisible && (
+        <div className="absolute top-30 right-4 bg-white shadow-lg rounded-lg w-80 p-4 z-50">
+          <h3 className="text-lg font-medium text-black mb-4">Danh sách cuộc trò chuyện</h3>
+          <ul className="space-y-2">
+            <li className="p-2 border-b hover:bg-gray-100 cursor-pointer">Cuộc trò chuyện 1</li>
+            <li className="p-2 border-b hover:bg-gray-100 cursor-pointer">Cuộc trò chuyện 2</li>
+            <li className="p-2 border-b hover:bg-gray-100 cursor-pointer">Cuộc trò chuyện 3</li>
+          </ul>
+          <button
+            onClick={toggleChatPopup}
+            className="mt-4 w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600"
+          >
+            Đóng
+          </button>
+        </div>
+      )}
 
       {/* Main Menu */}
       <div className="bg-white border-b">
