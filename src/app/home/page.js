@@ -5,7 +5,7 @@ import { useProducts } from '@/hooks/useProducts';
 import { ProductCard } from '@/components/product/ProductCard';
 import InfiniteScroll from "react-infinite-scroll-component";
 import Link from 'next/link';
-import { FaFacebook, FaInstagram, FaTwitter, FaLinkedin, FaShoppingCart, FaBell, FaQuestionCircle, FaSearch, FaCcVisa, FaCcMastercard, FaCcJcb, FaCcPaypal, FaGooglePay, FaApplePay } from 'react-icons/fa';
+import { FaFacebook, FaInstagram, FaTwitter, FaLinkedin, FaShoppingCart, FaBell, FaQuestionCircle, FaSearch, FaCcVisa, FaCcMastercard, FaCcJcb, FaCcPaypal, FaGooglePay, FaApplePay, FaComments } from 'react-icons/fa';
 
 export default function HomePage() {
   const { user, logout } = useAuth();
@@ -81,9 +81,14 @@ export default function HomePage() {
                 </button>
               </div>
             </div>
-            <div className="text-gray-700 text-2xl relative">
-              <FaShoppingCart size={24} />
-              <span className="absolute -top-2 -right-2 bg-blue-500 text-white rounded-full text-xs w-5 h-5 flex items-center justify-center">0</span>
+            <div className="text-gray-700 text-2xl relative flex items-center gap-4">
+              <div className="relative">
+                <FaShoppingCart size={24} />
+                <span className="absolute -top-2 -right-2 bg-blue-500 text-white rounded-full text-xs w-5 h-5 flex items-center justify-center">0</span>
+              </div>
+              <div className="relative">
+                <FaComments size={24} className="cursor-pointer text-gray-700 hover:text-blue-500" />
+              </div>
             </div>
           </div>
         </div>
