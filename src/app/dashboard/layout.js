@@ -20,13 +20,7 @@ export default function DashboardLayout({ children }) {
     { icon: "home", label: "Trang chủ", href: "/dashboard" },
     { icon: "box", label: "Kho hàng", href: "/dashboard/inventory" },
     { icon: "users", label: "Nhà cung cấp", href: "/dashboard/supplier" }, // Cập nhật href
-<<<<<<< HEAD
     { icon: "shopping-cart", label: "Đơn hàng", href: "#" },
-=======
-    { icon: "clipboard", label: "Đơn hàng", href: "/dashboard/order" },
-    { icon: "store", label: "Quản lý cửa hàng", href: "#" },
-    { icon: "cog", label: "Cài đặt", href: "#" },
->>>>>>> e15dc19267270345b92b5610f2631b43158065d8
   ];
 
   return (
