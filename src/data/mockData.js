@@ -218,28 +218,35 @@ export const getProduct = (id) => {
 
 export const mockConversations = [
   {
-    id: 1,
-    avatar: 'https://avatar.iran.liara.run/public',
-    name: 'Nguyễn Văn Sơn',
+    id: '1',
+    name: 'Nguyễn Văn A',
+    avatar: '/images/avatar1.jpg',
+    messages: [
+      { id: 1, sender: 'user', text: 'Xin chào!' },
+      { id: 2, sender: 'other', text: 'Chào bạn, tôi có thể giúp gì?' },
+      { id: 3, sender: 'user', text: 'Tôi muốn hỏi về sản phẩm mới.' },
+      { id: 4, sender: 'other', text: 'Sản phẩm mới hiện đang có khuyến mãi, bạn cần thông tin chi tiết không?' },
+      { id: 5, sender: 'user', text: 'Vâng, làm ơn gửi thông tin chi tiết.' },
+    ],
   },
   {
-    id: 2,
-    avatar: 'https://avatar.iran.liara.run/public',
-    name: 'Trần Thị Bích Nhung',
+    id: '2',
+    name: 'Trần Thị B',
+    avatar: '/images/avatar1.jpg',
+    messages: [
+      { id: 1, sender: 'user', text: 'Xin chào, tôi cần hỗ trợ.' },
+      { id: 2, sender: 'other', text: 'Chào bạn, bạn cần hỗ trợ gì?' },
+      { id: 3, sender: 'user', text: 'Tôi gặp vấn đề với đơn hàng.' },
+      { id: 4, sender: 'other', text: 'Bạn có thể cung cấp mã đơn hàng để tôi kiểm tra không?' },
+    ],
   },
   {
-    id: 3,
-    avatar: 'https://avatar.iran.liara.run/public',
-    name: 'Lê Văn Hoàng',
-  },
-  {
-    id: 4,
-    avatar: 'https://avatar.iran.liara.run/public',
-    name: 'Phạm Thị Thanh',
-  },
-  {
-    id: 5,
-    avatar: 'https://avatar.iran.liara.run/public',
-    name: 'Hoàng Văn Tiến',
+    id: '3',
+    name: 'Lê Văn C',
+    avatar: '/images/avatar1.jpg',
+    messages: [
+      { id: 1, sender: 'user', text: 'Chào bạn, tôi muốn đổi trả sản phẩm.' },
+      { id: 2, sender: 'other', text: 'Vâng, bạn vui lòng cung cấp thông tin sản phẩm và lý do đổi trả.' },
+    ],
   },
 ];

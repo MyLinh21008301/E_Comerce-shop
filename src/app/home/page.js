@@ -13,6 +13,7 @@ export default function HomePage() {
   const { user, logout } = useAuth();
   const { products, hasMore, loadMoreProducts, loading } = useProducts();
   const [isChatPopupVisible, setChatPopupVisible] = useState(false);
+  const [activeChat, setActiveChat] = useState(null);
 
   const toggleChatPopup = () => {
     setChatPopupVisible(!isChatPopupVisible);
@@ -107,26 +108,76 @@ export default function HomePage() {
 
       {/* Chat Popup */}
       {isChatPopupVisible && (
-        <div className="absolute top-20 right-4 bg-white shadow-lg rounded-lg w-80 p-4 z-50">
-          <h3 className="text-lg font-medium text-black mb-4">Danh sách cuộc trò chuyện</h3>
-          <ul className="space-y-2">
-            {mockConversations.map((conversation) => (
-              <li key={conversation.id} className="flex items-center gap-3 p-2 border-b hover:bg-gray-100 cursor-pointer">
-                <img
-                  src={conversation.avatar}
-                  alt={conversation.name}
-                  className="w-10 h-10 rounded-full object-cover"
+        <div className="fixed top-30 right-4 flex space-x-4 z-50">
+          {/* Chat List Popup */}
+          <div className="bg-white shadow-lg rounded-lg w-80 p-4">
+            <h3 className="text-lg font-medium text-black mb-4">Danh sách cuộc trò chuyện</h3>
+            <ul className="space-y-2">
+              {mockConversations.map((conversation) => (
+                <li
+                  key={conversation.id}
+                  className="flex items-center gap-3 p-2 border-b hover:bg-gray-100 cursor-pointer"
+                  onClick={() => setActiveChat(conversation)}
+                >
+                  <img
+                    src={conversation.avatar}
+                    alt={conversation.name}
+                    className="w-10 h-10 rounded-full object-cover"
+                  />
+                  <span className="text-black font-medium">{conversation.name}</span>
+                </li>
+              ))}
+            </ul>
+            <button
+              onClick={toggleChatPopup}
+              className="mt-4 w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600"
+            >
+              Đóng
+            </button>
+          </div>
+
+          {/* Chat Detail Popup */}
+          {activeChat && (
+            <div className="bg-white shadow-lg rounded-lg w-80 p-4">
+              <button
+                onClick={() => setActiveChat(null)}
+                className="text-blue-500 hover:underline mb-4"
+              >
+                Đóng
+              </button>
+              <h3 className="text-lg font-medium text-black mb-4">Trò chuyện với {activeChat.name}</h3>
+              {activeChat.messages ? (
+                <div className="space-y-2 overflow-y-auto max-h-60">
+                  {activeChat.messages.map((message, index) => (
+                    <div
+                      key={index}
+                      className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+                    >
+                      <div
+                        className={`p-2 rounded-lg shadow-md ${
+                          message.sender === 'user' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-black'
+                        }`}
+                      >
+                        {message.text}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-gray-500">Không có tin nhắn nào.</p>
+              )}
+              <div className="mt-4 flex items-center gap-2">
+                <input
+                  type="text"
+                  placeholder="Nhập tin nhắn..."
+                  className="flex-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
-                <span className="text-black font-medium">{conversation.name}</span>
-              </li>
-            ))}
-          </ul>
-          <button
-            onClick={toggleChatPopup}
-            className="mt-4 w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600"
-          >
-            Đóng
-          </button>
+                <button className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
+                  Gửi
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       )}
 
@@ -155,8 +206,8 @@ export default function HomePage() {
             <img src="/images/banner/main-banner.jpg" alt="Main Banner" className="w-full rounded-sm shadow-md hover:opacity-90 transition-opacity" />
           </div>
           <div className="col-span-4 space-y-4">
-            <img src="/images/banner/food-banner.jpg" alt="Food Banner" className="w-full rounded-sm shadow-md hover:opacity-90 transition-opacity" />
-            <img src="/images/banner/youtube-banner.jpg" alt="YouTube Banner" className="w-full rounded-sm shadow-md hover:opacity-90 transition-opacity" />
+            <img src="/images/banner/main-banner.jpg" alt="Food Banner" className="w-full rounded-sm shadow-md hover:opacity-90 transition-opacity" />
+            <img src="/images/banner/main-banner.jpg" alt="YouTube Banner" className="w-full rounded-sm shadow-md hover:opacity-90 transition-opacity" />
           </div>
         </div>
       </div>
