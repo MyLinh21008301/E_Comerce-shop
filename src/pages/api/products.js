@@ -30,13 +30,18 @@ export default async function handler(req, res) {
     const formDataToSend = new FormData();
 
     for (const [key, value] of Object.entries(fields)) {
+      
       if (Array.isArray(value)) {
         // Xử lý các trường đặc biệt
         if (key === 'firstCategories' || key === 'secondCategories') {
           try {
             // Thử parse JSON nếu có
             const parsedValue = JSON.parse(value[0]);
-            formDataToSend.append(key, JSON.stringify(parsedValue));
+            console.log('parsedValue:', parsedValue);
+            for(const item of parsedValue) {
+              formDataToSend.append(key, item);
+            }
+            // formDataToSend.append(key, parsedValue);
           } catch {
             // Nếu không parse được, gửi nguyên bản
             formDataToSend.append(key, value[0]);
@@ -45,8 +50,11 @@ export default async function handler(req, res) {
         // Xử lý các trường 'null' string
         else if (key === 'firstCategoryName' || key === 'secondCategoryName') {
           // console.log('value[0]:', value[0]);
-
-          formDataToSend.append(key, value[0] === 'null' ? null : value[0]);
+          if (value[0] === 'null') {
+          }
+          else {
+            formDataToSend.append(key, value[0] === 'null' ? null : value[0]);
+          }
         }
         // Các trường thông thường khác
         else {
@@ -110,7 +118,7 @@ export default async function handler(req, res) {
         }
       }
     }
-    // console.log('formDataToSend:', formDataToSend);
+    console.log('formDataToSend:', formDataToSend);
     
     // Lấy accessToken từ header hoặc fields
     const accessToken = req.headers.authorization?.replace('Bearer ', '') || fields.accessToken;
