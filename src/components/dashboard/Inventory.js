@@ -4,12 +4,29 @@ import React, { useState, useRef } from "react";
 import { mockProducts } from '@/data/mockData';
 import { CATEGORIES } from '@/utils/constants';
 import ProductDetailView from './ProductDetailView'; // Import component mới
+import { useAuth } from '@/context/AuthContext';
 
 export default function Inventory() {
+  const { user } = useAuth();
+
   const [showModal, setShowModal] = useState(false);
   const [image, setImage] = useState(null);
   const fileInputRef = useRef(null);
   const [selectedProductId, setSelectedProductId] = useState(null); // State mới
+  const [formData, setFormData] = useState({
+    productName: "",
+    price: "",
+    quantity: "",
+    coverImage: null,
+    images: [],
+    video: "",
+    vendorId: user?.vendorId || "", // Automatically fetch vendorId
+    firstCategories: [],
+    secondCategories: [],
+    firstCategoryName: "", // Added name for first category
+    secondCategoryName: "", // Added name for second category
+    isNew: false,
+  });
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -22,6 +39,44 @@ export default function Inventory() {
     }
   };
 
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleImageUpload = (e) => {
+    const files = Array.from(e.target.files);
+    if (files.length >= 3 && files.length <= 9) {
+      setFormData({ ...formData, images: files });
+    } else {
+      alert("Vui lòng chọn từ 3 đến 9 ảnh.");
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const { productName, price, quantity, coverImage, images, video, vendorId } = formData;
+
+    if (!productName || !price || !quantity || !coverImage || !video || !vendorId) {
+      alert("Vui lòng điền đầy đủ các trường bắt buộc.");
+      return;
+    }
+
+    if (quantity <= 0) {
+      alert("Số lượng sản phẩm phải lớn hơn 0.");
+      return;
+    }
+
+    if (images.length < 3 || images.length > 9) {
+      alert("Vui lòng chọn từ 3 đến 9 ảnh.");
+      return;
+    }
+
+    // Xử lý thêm sản phẩm
+    console.log("Thêm sản phẩm thành công", formData);
+    setShowModal(false);
+  };
+
   // Hàm xử lý khi click vào sản phẩm
   const handleProductClick = (productId) => {
     setSelectedProductId(productId);
@@ -30,6 +85,28 @@ export default function Inventory() {
   // Hàm xử lý khi nhấn nút Back trong chi tiết sản phẩm
   const handleBackToList = () => {
     setSelectedProductId(null);
+  };
+
+  const handleAddCategory = (e, categoryType) => {
+    if (e.key === "Enter" && e.target.value.trim() !== "") {
+      e.preventDefault();
+      setFormData({
+        ...formData,
+        [categoryType]: [...formData[categoryType], e.target.value.trim()],
+      });
+      e.target.value = "";
+    }
+  };
+
+  const handleRemoveCategory = (index, categoryType) => {
+    setFormData({
+      ...formData,
+      [categoryType]: formData[categoryType].filter((_, i) => i !== index),
+    });
+  };
+
+  const toggleIsNew = () => {
+    setFormData((prevData) => ({ ...prevData, isNew: !prevData.isNew }));
   };
 
   return (
@@ -124,70 +201,157 @@ export default function Inventory() {
           <div className="fixed inset-0 z-50 flex items-center justify-center">
             <div className="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-[26rem] border border-gray-100">
               <h2 className="text-xl font-semibold text-black mb-6 text-left">Sản phẩm mới</h2>
-              <form>
+              <form onSubmit={handleSubmit}>
                 <div className="grid grid-cols-2 gap-4">
-                  {/* Phần ảnh sản phẩm */}
-                  <div className="flex flex-col items-center">
-                    <label className="block text-black text-sm mb-1 w-full text-left">Ảnh sản phẩm</label>
-                    <div
-                      className="w-32 h-32 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center cursor-pointer bg-gray-50 mb-2"
-                      onClick={() => fileInputRef.current.click()}
-                    >
-                      {image ? (
-                        <img src={image} alt="preview" className="w-full h-full object-cover rounded-lg" />
-                      ) : (
-                        <span className="text-gray-400 text-xs text-center">Thả ảnh vào đây<br/>hoặc<br/><span className='text-blue-500 underline'>Tải ảnh lên</span></span>
-                      )}
+                  <div>
+                    <label className="block text-black text-sm mb-1">Tên sản phẩm *</label>
+                    <input
+                      name="productName"
+                      value={formData.productName}
+                      onChange={handleInputChange}
+                      className="w-full border border-gray-300 rounded px-2 py-1 text-black bg-gray-50"
+                      placeholder="Nhập tên sản phẩm"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-black text-sm mb-1">Giá *</label>
+                    <input
+                      name="price"
+                      value={formData.price}
+                      onChange={handleInputChange}
+                      className="w-full border border-gray-300 rounded px-2 py-1 text-black bg-gray-50"
+                      placeholder="Nhập giá"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-black text-sm mb-1">Số lượng *</label>
+                    <input
+                      name="quantity"
+                      type="number"
+                      value={formData.quantity}
+                      onChange={handleInputChange}
+                      className="w-full border border-gray-300 rounded px-2 py-1 text-black bg-gray-50"
+                      placeholder="Nhập số lượng"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-black text-sm mb-1">Ảnh bìa *</label>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => setFormData({ ...formData, coverImage: e.target.files[0] })}
+                      className="w-full border border-gray-300 rounded px-2 py-1 text-black bg-gray-50"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-black text-sm mb-1">Ảnh sản phẩm (3-9 ảnh) *</label>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      multiple
+                      onChange={handleImageUpload}
+                      className="w-full border border-gray-300 rounded px-2 py-1 text-black bg-gray-50"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-black text-sm mb-1">Video *</label>
+                    <input
+                      type="file"
+                      accept="video/*"
+                      onChange={(e) => setFormData({ ...formData, video: e.target.files[0] })}
+                      className="w-full border border-gray-300 rounded px-2 py-1 text-black bg-gray-50"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-black text-sm mb-1">Tên loại phần 1</label>
+                    <input
+                      type="text"
+                      value={formData.firstCategoryName}
+                      onChange={(e) => setFormData({ ...formData, firstCategoryName: e.target.value })}
+                      className="w-full border border-gray-300 rounded px-2 py-1 text-black bg-gray-50"
+                      placeholder="Nhập tên loại phần 1"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-black text-sm mb-1">Loại phần 1</label>
+                    <div className="border border-gray-300 rounded px-2 py-1 text-black bg-gray-50">
+                      {formData.firstCategories.map((category, index) => (
+                        <span
+                          key={index}
+                          className="inline-block bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-xs mr-2 mb-2 cursor-pointer"
+                          onClick={() => handleRemoveCategory(index, "firstCategories")}
+                        >
+                          {category} &times;
+                        </span>
+                      ))}
                       <input
-                        type="file"
-                        accept="image/*"
-                        className="hidden"
-                        ref={fileInputRef}
-                        onChange={handleImageChange}
+                        type="text"
+                        placeholder={`Nhập ${formData.firstCategoryName || "loại phần 1"} và nhấn Enter`}
+                        className="w-full border-none focus:outline-none"
+                        onKeyDown={(e) => handleAddCategory(e, "firstCategories")}
                       />
                     </div>
                   </div>
-
-                  {/* Phần điền thông tin */}
-                  <div className="grid grid-cols-1 gap-3">
-                    <div>
-                      <label className="block text-black text-sm mb-1">Tên sản phẩm</label>
-                      <input className="w-full border border-gray-300 rounded px-2 py-1 text-black bg-gray-50" placeholder="Nhập tên sản phẩm" />
+                  <div>
+                    <label className="block text-black text-sm mb-1">Tên loại phần 2</label>
+                    <input
+                      type="text"
+                      value={formData.secondCategoryName}
+                      onChange={(e) => setFormData({ ...formData, secondCategoryName: e.target.value })}
+                      className="w-full border border-gray-300 rounded px-2 py-1 text-black bg-gray-50"
+                      placeholder="Nhập tên loại phần 2"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-black text-sm mb-1">Loại phần 2</label>
+                    <div className="border border-gray-300 rounded px-2 py-1 text-black bg-gray-50">
+                      {formData.secondCategories.map((category, index) => (
+                        <span
+                          key={index}
+                          className="inline-block bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs mr-2 mb-2 cursor-pointer"
+                          onClick={() => handleRemoveCategory(index, "secondCategories")}
+                        >
+                          {category} &times;
+                        </span>
+                      ))}
+                      <input
+                        type="text"
+                        placeholder={`Nhập ${formData.secondCategoryName || "loại phần 2"} và nhấn Enter`}
+                        className="w-full border-none focus:outline-none"
+                        onKeyDown={(e) => handleAddCategory(e, "secondCategories")}
+                      />
                     </div>
-                    <div>
-                      <label className="block text-black text-sm mb-1">Mã sản phẩm</label>
-                      <input className="w-full border border-gray-300 rounded px-2 py-1 text-black bg-gray-50" placeholder="Nhập mã sản phẩm" />
-                    </div>
-                    <div>
-                      <label className="block text-black text-sm mb-1">Loại sản phẩm</label>
-                      <select className="w-full border border-gray-300 rounded px-2 py-1 text-black bg-gray-50">
-                        <option>Chọn loại sản phẩm</option>
-                        {CATEGORIES.map(c => (
-                          <option key={c.id} value={c.name}>{c.name}</option>
-                        ))}
-                      </select>
-                    </div>
-                    <div>
-                      <label className="block text-black text-sm mb-1">Giá nhập</label>
-                      <input className="w-full border border-gray-300 rounded px-2 py-1 text-black bg-gray-50" placeholder="Nhập giá nhập" />
-                    </div>
-                    <div>
-                      <label className="block text-black text-sm mb-1">Số lượng</label>
-                      <input className="w-full border border-gray-300 rounded px-2 py-1 text-black bg-gray-50" placeholder="Nhập số lượng" />
-                    </div>
-                    <div>
-                      <label className="block text-black text-sm mb-1">Hạn sử dụng</label>
-                      <input className="w-full border border-gray-300 rounded px-2 py-1 text-black bg-gray-50" placeholder="Nhập hạn sử dụng" />
-                    </div>
-                    <div>
-                      <label className="block text-black text-sm mb-1">Giá trị giới hạn</label>
-                      <input className="w-full border border-gray-300 rounded px-2 py-1 text-black bg-gray-50" placeholder="Nhập giá trị giới hạn" />
-                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-black text-sm mb-1">Sản phẩm mới</label>
+                    <button
+                      type="button"
+                      onClick={toggleIsNew}
+                      className={`px-4 py-1 rounded ${formData.isNew ? 'bg-green-600 text-white' : 'bg-gray-300 text-black'}`}
+                    >
+                      {formData.isNew ? 'Đánh dấu là cũ' : 'Đánh dấu là mới'}
+                    </button>
                   </div>
                 </div>
                 <div className="flex justify-end gap-2 mt-6">
-                  <button type="button" className="px-4 py-1 rounded border border-gray-300 bg-white text-black hover:bg-gray-100" onClick={() => setShowModal(false)}>Hủy</button>
-                  <button type="submit" className="px-4 py-1 rounded bg-blue-600 text-white hover:bg-blue-700">Thêm sản phẩm</button>
+                  <button
+                    type="button"
+                    className="px-4 py-1 rounded border border-gray-300 bg-white text-black hover:bg-gray-100"
+                    onClick={() => setShowModal(false)}
+                  >
+                    Hủy
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-4 py-1 rounded bg-blue-600 text-white hover:bg-blue-700"
+                  >
+                    Thêm sản phẩm
+                  </button>
                 </div>
               </form>
             </div>
