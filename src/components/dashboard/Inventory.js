@@ -59,6 +59,8 @@ export default function Inventory() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    console.log("FormData before submit:", formData);
+
     const { productName, price, quantity, coverImage, images, video } = formData;
 
     // Kiểm tra các trường bắt buộc
@@ -80,11 +82,11 @@ export default function Inventory() {
     // Tạo FormData
     const formDataToSend = new FormData();
     formDataToSend.append("productName", productName);
-    formDataToSend.append("price", price);
-    formDataToSend.append("stock", quantity);
+    formDataToSend.append("price", parseFloat(price));
+    formDataToSend.append("stock", parseInt(quantity));
     formDataToSend.append("coverImage", coverImage);
     formDataToSend.append("video", video);
-    formDataToSend.append("vendorId", formData.userId);
+    formDataToSend.append("vendorId", user.userId);
     formDataToSend.append("firstCategoryName", formData.firstCategoryName);
     formDataToSend.append("secondCategoryName", formData.secondCategoryName);
     formDataToSend.append("isNew", formData.isNew);
@@ -95,13 +97,15 @@ export default function Inventory() {
     const accessToken = localStorage.getItem("accessToken");
 
     // Thêm danh sách ảnh
-    images.forEach((image, index) => {
-      formDataToSend.append(`images[${index}]`, image);
+    images.forEach((image) => {
+      formDataToSend.append("images", image);
     });
+
+    console.log("FormData:", formDataToSend);
 
     try {
       // Gửi dữ liệu bằng fetch
-      const response = await fetch(`${backendUrl}/api/products`, {
+      const response = await fetch(`/api/products`, {
         method: "POST",
         body: formDataToSend,
         headers: {
@@ -110,7 +114,8 @@ export default function Inventory() {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to upload product");
+        const errorData = await response.json(); // Đọc lỗi chi tiết từ server
+        throw new Error(errorData.message || "Failed to upload product");
       }
 
       const result = await response.json();
