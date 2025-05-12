@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from '@/context/AuthContext';
 
 
-const defaultToken = "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJKcGNvM1ZIeFJTMVhrSm1mcVN3WXp4NHZLenFPUUhoTUlmaXJoRFYtVUZVIn0.eyJleHAiOjE3NDcwNTQ2NjMsImlhdCI6MTc0NzAxODY2NiwianRpIjoib25ydGFjOmUyMmU4OTllLTUxMmUtNDQwZC1hYTNiLWI2YTUzNjJlNzRiZCIsImlzcyI6Imh0dHA6Ly81ZWFjLTEyNS0yMzUtMjM5LTE5Ni5uZ3Jvay1mcmVlLmFwcC9yZWFsbXMvZGVtbyIsInR5cCI6IkJlYXJlciIsImF6cCI6ImZyb250ZW5kLWNsaWVudCIsInNpZCI6ImUyOTI5ZTZkLWI1OTktNDk4Zi05NWEzLWQwN2I5YTQ1ZDZkMiIsInNjb3BlIjoib3BlbmlkIHJvbGVzIHBob25lIiwicm9sZXMiOlsib2ZmbGluZV9hY2Nlc3MiLCJWRU5ET1IiLCJkZWZhdWx0LXJvbGVzLWRlbW8iLCJ1bWFfYXV0aG9yaXphdGlvbiIsIlVTRVIiXSwibGFzdF9uYW1lIjoicGhhbSIsInBob25lX251bWJlciI6IjA5NDQ3MTMwMTUiLCJmaXJzdF9uYW1lIjoibWFuaCIsImVtYWlsIjoicG1hbmhoMTdAZ21haWwuY29tIiwidXNlcm5hbWUiOiJoZWdvcGxheSJ9.3A1gU2TfZ5yrcm4j0QAx8zG6qnL_OI5UjvzGztFbLm4tS9vE0GmTR-UlmC1JYtitQKKh0f-7Z6BKfunrWeJ6VAU6EzZbtDpOa-fr-wZeE30E_lEYgqFYdDsMXvD-AEpiSkF1UWSZ8HjPZe4l5JfQHQxd_jpP6ZFsoUWOOZPPDqpdCV9X8p27F7-ietIly2iLkPr15AdywDggQBur9llfbpqsF8nIvGX4mtAOz_NZliqMecoH9rCuGL9DtD2KhZQAdo3BbYQPIaqLI_bLzTsywr_H3Prhi5p3j558pO-KmoN-4dAZ6j5oNibI31KV0gMN9BWBbeFBMPHpy_QZYijutQ";
+const defaultToken = "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJKcGNvM1ZIeFJTMVhrSm1mcVN3WXp4NHZLenFPUUhoTUlmaXJoRFYtVUZVIn0.eyJleHAiOjE3NDcwNjg0OTIsImlhdCI6MTc0NzAzMjQ5MiwianRpIjoib25ydGFjOjQyMjY2OGI5LWM4ZjgtNDkzMS05N2NlLTI0NTQ0NGVhMmJkMiIsImlzcyI6Imh0dHA6Ly81ZWFjLTEyNS0yMzUtMjM5LTE5Ni5uZ3Jvay1mcmVlLmFwcC9yZWFsbXMvZGVtbyIsInR5cCI6IkJlYXJlciIsImF6cCI6ImZyb250ZW5kLWNsaWVudCIsInNpZCI6IjQzMzk0NzQ3LWVlMWYtNDRjOC04OTJkLTg5MmI4NjkxYmQ0YiIsInNjb3BlIjoib3BlbmlkIHJvbGVzIHBob25lIiwicm9sZXMiOlsib2ZmbGluZV9hY2Nlc3MiLCJkZWZhdWx0LXJvbGVzLWRlbW8iLCJ1bWFfYXV0aG9yaXphdGlvbiIsIlVTRVIiXSwibGFzdF9uYW1lIjoiUGhhbSIsInBob25lX251bWJlciI6IjA5NDQ3MTMwMTUiLCJmaXJzdF9uYW1lIjoiTWFuaCIsImVtYWlsIjoicG1hbmhoMTlAZ21haS5mY2QiLCJ1c2VybmFtZSI6InRlc3RlcjEifQ.Qeyh0cSWzZK8aOpiMx7vtjkORqknH8vkTfMP_WKI1-8px2zIMgDlBa54ONFWDEUTdDqDu7viX7EZrDHRq6A14nwcxHbD6rtuvAOpxO1zR-NCGOQqP1c_36o2N7CtVaJpSkXHos7I29qQnF_aWsOEmtrTF6ipks0jqUHVU5lKaB6z8nWc7SF6AhHWr7wsFLHLhsXi11LWtBU28Qp5VfB50x1j4uMe0o1F06OkvUyLXtwdo_jPbHj9UJ57Ef6OirY1Njt0Wd0VLx7PV54-eHClvdVU8vKc75yRrU0AJ6rYynfpnnhtsG4zk1Z44fplshgW5flrrH75aOFGeKM7-C6nHQ";
 
 
 export default function Login() {
@@ -30,41 +30,33 @@ export default function Login() {
       // Đăng nhập thành công
 
 
-      login({
-        username: username,
-        name: "Admin User", //chinh lai sang fullName
-        role: "admin"
-      });
-      
-      router.push('/home');
-    }
 
-    //   fetch(`${backendUrl}/api/users/me`, {
-    //     method: 'GET',
-    //     headers: {
-    //       'Authorization': `Bearer ${defaultToken}`,
-    //       'Content-Type': 'application/json'
-    //     }
-    //   }).then((response) => {
-    //     if (response.ok) {
-    //       return response.json();
-    //     } else {
-    //       throw new Error('Failed to fetch user data');
-    //     }
-    //   })
-    //   .then((data) => {
-    //     login(data);
-    //     router.push('/home');
-    //   }
-    //   ).catch((error) => {
-    //     console.error('Error:', error);
-    //     setError("Đã xảy ra lỗi khi tải thông tin người dùng");
-    //   });
-    //   // const 
-    //   // router.push('/home');
-    // } else {
-    //   setError("Tên đăng nhập hoặc mật khẩu không chính xác");
-    // }
+      fetch(`${backendUrl}/api/users/me`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${defaultToken}`,
+          'Content-Type': 'application/json'
+        }
+      }).then((response) => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error('Failed to fetch user data');
+        }
+      })
+      .then((data) => {
+        login(data);
+        router.push('/home');
+      }
+      ).catch((error) => {
+        console.error('Error:', error);
+        setError("Đã xảy ra lỗi khi tải thông tin người dùng");
+      });
+      // const 
+      // router.push('/home');
+    } else {
+      setError("Tên đăng nhập hoặc mật khẩu không chính xác");
+    }
   };
 
   return (

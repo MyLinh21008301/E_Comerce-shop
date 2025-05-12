@@ -1,6 +1,7 @@
 // src/app/dashboard/layout.js
 "use client"; // Layouts trong App Router cần 'use client' nếu có hooks hoặc tương tác
 
+import { useAuth } from '@/context/AuthContext';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation'; // Import useRouter
 
@@ -10,6 +11,7 @@ import { usePathname, useRouter } from 'next/navigation'; // Import useRouter
 export default function DashboardLayout({ children }) {
   const pathname = usePathname();
   const router = useRouter(); // Khởi tạo router
+  const { user } = useAuth(); // Giả sử bạn có hook để lấy thông tin người dùng
 
   const handleLogout = () => {
     // Logic đăng xuất (xóa token, etc.)
@@ -20,7 +22,10 @@ export default function DashboardLayout({ children }) {
     { icon: "home", label: "Trang chủ", href: "/dashboard" },
     { icon: "box", label: "Kho hàng", href: "/dashboard/inventory" },
     { icon: "users", label: "Nhà cung cấp", href: "/dashboard/supplier" }, // Cập nhật href
-    { icon: "shopping-cart", label: "Đơn hàng", href: "#" },
+    { icon: "shopping-cart", label: "Đơn hàng", href: "/dashboard/order" },
+    { icon: "tag", label: "Quản lý Voucher", href: "/dashboard/voucher" },
+    { icon: "shopping-cart", label: "Quay về trang chủ", href: "/home" },
+    
   ];
 
   return (
@@ -28,7 +33,9 @@ export default function DashboardLayout({ children }) {
       {/* Navigation Sidebar */}
       <div className="w-64 bg-white shadow-sm flex flex-col"> {/* Thêm flex flex-col */}
         {/* Logo */}
-        <div className="flex items-center gap-2 px-6 py-4 border-b">
+        <div className="flex items-center gap-2 px-6 py-4 border-b cursor-pointer"
+          onClick={() => router.push('/home')} // Chuyển hướng về trang dashboard khi click logo
+        >
           <div className="w-8 h-8">
             {/* Sử dụng Image component của Next.js nếu có thể */}
             <img src="/images/logo.png" alt="Shopee Logo" className="w-full h-full object-contain" />
@@ -90,7 +97,7 @@ export default function DashboardLayout({ children }) {
                 alt="User Avatar"
                 className="w-8 h-8 rounded-full object-cover cursor-pointer"
               />
-              <span className="text-gray-800 font-medium">Tên người dùng</span> {/* Thay bằng tên user đang đăng nhập */}
+              <span className="text-gray-800 font-medium">{user?.fullName||"nguoi dung"}</span> {/* Thay bằng tên user đang đăng nhập */}
             </div>
           </div>
         </div>

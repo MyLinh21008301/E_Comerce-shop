@@ -6,7 +6,7 @@ import { ProductCard } from '@/components/product/ProductCard';
 import InfiniteScroll from "react-infinite-scroll-component";
 import Link from 'next/link';
 import { FaFacebook, FaInstagram, FaTwitter, FaLinkedin, FaShoppingCart, FaBell, FaQuestionCircle, FaSearch, FaCcVisa, FaCcMastercard, FaCcJcb, FaCcPaypal, FaGooglePay, FaApplePay, FaComments } from 'react-icons/fa';
-import { useState } from 'react';
+import { use, useEffect, useState } from 'react';
 import { mockConversations } from '@/data/mockData';
 
 export default function HomePage() {
@@ -14,6 +14,11 @@ export default function HomePage() {
   const { products, hasMore, loadMoreProducts, loading } = useProducts();
   const [isChatPopupVisible, setChatPopupVisible] = useState(false);
   const [activeChat, setActiveChat] = useState(null);
+
+
+  useEffect(() => {
+    console.log("User data:", user);
+  },[] );
 
   const toggleChatPopup = () => {
     setChatPopupVisible(!isChatPopupVisible);
@@ -50,7 +55,7 @@ export default function HomePage() {
               <a href="#" className="hover:text-blue-500">Tiếng Việt</a>
               {user ? (
                 <div className="flex items-center gap-3">
-                  <span className="hover:text-blue-500">{user.name}</span>
+                  <span className="hover:text-blue-500">{user.fullName}</span>
                   <button 
                     onClick={logout}
                     className="hover:text-blue-500"

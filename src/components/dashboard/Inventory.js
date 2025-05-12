@@ -23,11 +23,13 @@ export default function Inventory() {
     vendorId: user?.vendorId || "", // Automatically fetch vendorId
     firstCategories: [],
     secondCategories: [],
-    firstCategoryName: "", // Added name for first category
-    secondCategoryName: "", // Added name for second category
+    firstCategoryName: null, // Added name for first category
+    secondCategoryName: null, // Added name for second category
     isNew: false,
     isVisible: true, // Added visibility state
   });
+
+  const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8080";
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -54,11 +56,13 @@ export default function Inventory() {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const { productName, price, quantity, coverImage, images, video, vendorId } = formData;
 
-    if (!productName || !price || !quantity || !coverImage || !video || !vendorId) {
+    const { productName, price, quantity, coverImage, images, video } = formData;
+
+    // Kiểm tra các trường bắt buộc
+    if (!productName || !price || !quantity || !coverImage || !video) {
       alert("Vui lòng điền đầy đủ các trường bắt buộc.");
       return;
     }
@@ -73,9 +77,66 @@ export default function Inventory() {
       return;
     }
 
-    // Xử lý thêm sản phẩm
-    console.log("Thêm sản phẩm thành công", formData);
-    setShowModal(false);
+    // Tạo FormData
+    const formDataToSend = new FormData();
+    formDataToSend.append("productName", productName);
+    formDataToSend.append("price", price);
+    formDataToSend.append("stock", quantity);
+    formDataToSend.append("coverImage", coverImage);
+    formDataToSend.append("video", video);
+    formDataToSend.append("vendorId", formData.userId);
+    formDataToSend.append("firstCategoryName", formData.firstCategoryName);
+    formDataToSend.append("secondCategoryName", formData.secondCategoryName);
+    formDataToSend.append("isNew", formData.isNew);
+    formDataToSend.append("isVisible", formData.isVisible);
+    formDataToSend.append("firstCategories", JSON.stringify(formData.firstCategories));
+    formDataToSend.append("secondCategories", JSON.stringify(formData.secondCategories));
+
+    const accessToken = localStorage.getItem("accessToken");
+
+    // Thêm danh sách ảnh
+    images.forEach((image, index) => {
+      formDataToSend.append(`images[${index}]`, image);
+    });
+
+    try {
+      // Gửi dữ liệu bằng fetch
+      const response = await fetch(`${backendUrl}/api/products`, {
+        method: "POST",
+        body: formDataToSend,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to upload product");
+      }
+
+      const result = await response.json();
+      alert("Thêm sản phẩm thành công!");
+      console.log("Response:", result);
+
+      // Reset form
+      setFormData({
+        productName: "",
+        price: "",
+        quantity: "",
+        coverImage: null,
+        images: [],
+        video: "",
+        firstCategories: [],
+        secondCategories: [],
+        firstCategoryName: "",
+        secondCategoryName: "",
+        isNew: false,
+        isVisible: true,
+      });
+      setShowModal(false);
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Đã xảy ra lỗi khi thêm sản phẩm.");
+    }
   };
 
   // Hàm xử lý khi click vào sản phẩm
@@ -114,7 +175,7 @@ export default function Inventory() {
     <div className="relative">
       {/* Thanh tìm kiếm và Tổng quan luôn hiển thị */}
       {/* Thanh tìm kiếm */}
-      
+
 
       {/* Tổng quan kho */}
       <div className="grid grid-cols-4 gap-4 mb-8">
@@ -200,7 +261,7 @@ export default function Inventory() {
           {/* Overlay blur, không tối màu */}
           <div className="fixed inset-0 z-40 backdrop-blur-[3px] bg-white/40 transition-all"></div>
           <div className="fixed inset-0 z-50 flex items-center justify-center">
-            <div className="bg-white rounded-2xl shadow-2xl p-4 w-full max-w-[20.16rem] border border-gray-200">
+            <div className="bg-white rounded-2xl shadow-2xl p-4 w-full max-w-125 border border-gray-200">
               <h2 className="text-lg font-semibold text-black mb-3 text-center">Thêm sản phẩm mới</h2>
               <form onSubmit={handleSubmit} className="space-y-2">
                 <div>
@@ -269,85 +330,92 @@ export default function Inventory() {
                     required
                   />
                 </div>
-                <div>
-                  <label className="block text-black text-xs font-medium mb-1">Tên loại phần 1</label>
-                  <input
-                    type="text"
-                    value={formData.firstCategoryName}
-                    onChange={(e) => setFormData({ ...formData, firstCategoryName: e.target.value })}
-                    className="w-full border border-gray-300 rounded-lg px-1.5 py-0.5 text-black bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                    placeholder="Nhập tên loại phần 1"
-                  />
-                </div>
-                <div>
-                  <label className="block text-black text-xs font-medium mb-1">Loại phần 1</label>
-                  <div className="border border-gray-300 rounded-lg px-1.5 py-0.5 text-black bg-gray-50">
-                    {formData.firstCategories.map((category, index) => (
-                      <span
-                        key={index}
-                        className="inline-block bg-blue-100 text-blue-700 px-1 py-0.5 rounded-full text-xs mr-1 mb-1 cursor-pointer"
-                        onClick={() => handleRemoveCategory(index, "firstCategories")}
-                      >
-                        {category} &times;
-                      </span>
-                    ))}
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <label className="block text-black text-xs font-medium mb-1">Tên loại phần 1</label>
                     <input
                       type="text"
-                      placeholder={`Nhập ${formData.firstCategoryName || "loại phần 1"} và nhấn Enter`}
-                      className="w-full border-none focus:outline-none"
-                      onKeyDown={(e) => handleAddCategory(e, "firstCategories")}
+                      value={formData.firstCategoryName}
+                      onChange={(e) => setFormData({ ...formData, firstCategoryName: e.target.value })}
+                      className="w-full border border-gray-300 rounded-lg px-1.5 py-0.5 text-black bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                      placeholder="Nhập tên loại phần 1"
                     />
                   </div>
-                </div>
-                <div>
-                  <label className="block text-black text-xs font-medium mb-1">Tên loại phần 2</label>
-                  <input
-                    type="text"
-                    value={formData.secondCategoryName}
-                    onChange={(e) => setFormData({ ...formData, secondCategoryName: e.target.value })}
-                    className="w-full border border-gray-300 rounded-lg px-1.5 py-0.5 text-black bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                    placeholder="Nhập tên loại phần 2"
-                  />
-                </div>
-                <div>
-                  <label className="block text-black text-xs font-medium mb-1">Loại phần 2</label>
-                  <div className="border border-gray-300 rounded-lg px-1.5 py-0.5 text-black bg-gray-50">
-                    {formData.secondCategories.map((category, index) => (
-                      <span
-                        key={index}
-                        className="inline-block bg-green-100 text-green-700 px-1 py-0.5 rounded-full text-xs mr-1 mb-1 cursor-pointer"
-                        onClick={() => handleRemoveCategory(index, "secondCategories")}
-                      >
-                        {category} &times;
-                      </span>
-                    ))}
+                  <div>
+                    <label className="block text-black text-xs font-medium mb-1">Loại phần 1</label>
+                    <div className="border border-gray-300 rounded-lg px-1.5 py-0.5 text-black bg-gray-50">
+                      {formData.firstCategories.map((category, index) => (
+                        <span
+                          key={index}
+                          className="inline-block bg-blue-100 text-blue-700 px-1 py-0.5 rounded-full text-xs mr-1 mb-1 cursor-pointer"
+                          onClick={() => handleRemoveCategory(index, "firstCategories")}
+                        >
+                          {category} &times;
+                        </span>
+                      ))}
+                      <input
+                        type="text"
+                        placeholder={`Nhập ${formData.firstCategoryName || "loại phần 1"} và nhấn Enter`}
+                        className="w-full border-none focus:outline-none"
+                        onKeyDown={(e) => handleAddCategory(e, "firstCategories")}
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-black text-xs font-medium mb-1">Tên loại phần 2</label>
                     <input
                       type="text"
-                      placeholder={`Nhập ${formData.secondCategoryName || "loại phần 2"} và nhấn Enter`}
-                      className="w-full border-none focus:outline-none"
-                      onKeyDown={(e) => handleAddCategory(e, "secondCategories")}
+                      value={formData.secondCategoryName}
+                      onChange={(e) => setFormData({ ...formData, secondCategoryName: e.target.value })}
+                      className="w-full border border-gray-300 rounded-lg px-1.5 py-0.5 text-black bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                      placeholder="Nhập tên loại phần 2"
                     />
                   </div>
+                  <div>
+                    <label className="block text-black text-xs font-medium mb-1">Loại phần 2</label>
+                    <div className="border border-gray-300 rounded-lg px-1.5 py-0.5 text-black bg-gray-50">
+                      {formData.secondCategories.map((category, index) => (
+                        <span
+                          key={index}
+                          className="inline-block bg-green-100 text-green-700 px-1 py-0.5 rounded-full text-xs mr-1 mb-1 cursor-pointer"
+                          onClick={() => handleRemoveCategory(index, "secondCategories")}
+                        >
+                          {category} &times;
+                        </span>
+                      ))}
+                      <input
+                        type="text"
+                        placeholder={`Nhập ${formData.secondCategoryName || "loại phần 2"} và nhấn Enter`}
+                        className="w-full border-none focus:outline-none"
+                        onKeyDown={(e) => handleAddCategory(e, "secondCategories")}
+                      />
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <label className="block text-black text-xs font-medium mb-1">Hiển thị trên trang web</label>
-                  <input
-                    type="checkbox"
-                    checked={formData.isVisible}
-                    onChange={(e) => setFormData({ ...formData, isVisible: e.target.checked })}
-                    className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                  />
+
+
+                <div className="grid grid-cols-2 gap-2 mt-3">
+                  <div>
+                    <label className="block text-black text-xs font-medium mb-1">Hiển thị trên trang web</label>
+                    <input
+                      type="checkbox"
+                      checked={formData.isVisible}
+                      onChange={(e) => setFormData({ ...formData, isVisible: e.target.checked })}
+                      className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-black text-xs font-medium mb-1">Trạng thái sản phẩm mới</label>
+                    <button
+                      type="button"
+                      onClick={toggleIsNew}
+                      className={`px-2 py-0.5 rounded-lg border ${formData.isNew ? 'bg-green-600 text-white' : 'bg-gray-300 text-black'} hover:bg-green-700 focus:ring-2 focus:ring-green-500`}
+                    >
+                      {formData.isNew ? 'là sản phẩm mới' : 'là sản phẩm cũ'}
+                    </button>
+                  </div>
                 </div>
-                <div>
-                  <label className="block text-black text-xs font-medium mb-1">Trạng thái sản phẩm mới</label>
-                  <button
-                    type="button"
-                    onClick={toggleIsNew}
-                    className={`px-2 py-0.5 rounded-lg border ${formData.isNew ? 'bg-green-600 text-white' : 'bg-gray-300 text-black'} hover:bg-green-700 focus:ring-2 focus:ring-green-500`}
-                  >
-                    {formData.isNew ? 'Đã đánh dấu là sản phẩm mới' : 'Đánh dấu là sản phẩm mới'}
-                  </button>
-                </div>
+
                 <div className="flex justify-end gap-2 mt-3">
                   <button
                     type="button"
