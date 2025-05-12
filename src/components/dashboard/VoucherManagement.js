@@ -1,62 +1,75 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import VoucherDetailView from "./VoucherDetailView";
 import VoucherView from "./VoucherView";
+import { voucherApi } from "@/services/api/voucher";
 
 export default function VoucherManagement() {
-  const [vouchers, setVouchers] = useState([
-    {
-      id: 1,
-      name: "Giảm giá 10%",
-      code: "SALE10",
-      startDate: "2025-05-01",
-      endDate: "2025-05-31",
-      discountType: "percentage",
-      discountValue: 10,
-      minOrderValue: 100000,
-      maxUsage: 100,
-      maxUsagePerUser: 1,
-      totalUsed: 50,
-    },
-    {
-      id: 2,
-      name: "Giảm giá mùa hè",
-      code: "SUMMER25",
-      startDate: "2025-06-01",
-      endDate: "2025-08-31",
-      discountType: "percentage",
-      discountValue: 25,
-      minOrderValue: 200000,
-      maxUsage: 200,
-      maxUsagePerUser: 1,
-      totalUsed: 75,
-    },
-    {
-      id: 3,
-      name: "Flash Sale",
-      code: "FLASH50",
-      startDate: "2025-05-15",
-      endDate: "2025-05-16",
-      discountType: "percentage",
-      discountValue: 50,
-      minOrderValue: 300000,
-      maxUsage: 50,
-      maxUsagePerUser: 1,
-      totalUsed: 40,
-    }
-  ]);
+  const [vouchers, setVouchers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [retryCount, setRetryCount] = useState(0);
 
   // State để theo dõi voucher được chọn
   const [selectedVoucherId, setSelectedVoucherId] = useState(null);
   // State để kiểm soát hiển thị popup
   const [isPopupOpen, setIsPopupOpen] = useState(false);
 
-  const handleDelete = (id) => {
-    setVouchers(vouchers.filter((voucher) => voucher.id !== id));
+  // Hàm để lấy dữ liệu từ API
+  const fetchVouchers = async () => {
+  try {
+    setLoading(true);
+    setError(null);
+    
+    // Gọi API để lấy dữ liệu - có thể trả về mảng hoặc null hoặc lỗi
+    const data = await voucherApi.getVouchers();
+    
+    // data đã được đảm bảo là mảng từ hàm voucherApi.getVouchers()
+    // nên chúng ta có thể map trực tiếp
+    const formattedVouchers = (data || []).map(item => ({
+      id: item.id || item.voucherId,
+      name: item.voucherName || "Voucher không tên",
+      code: item.voucherCode || "-",
+      startDate: item.startDate ? new Date(item.startDate).toLocaleDateString() : "-",
+      endDate: item.endDate ? new Date(item.endDate).toLocaleDateString() : "-",
+      discountType: item.voucherType === "PERCENT" ? "percentage" : "amount",
+      discountValue: item.voucherType === "PERCENT" ? 
+        Number(item.percentDiscount) : Number(item.valueDiscount || 0),
+      minOrderValue: Number(item.minPriceRequired || 0),
+      maxUsage: Number(item.usesCount || 0),
+      maxUsagePerUser: 1,
+      totalUsed: Number(item.usedCount || 0)
+    }));
+      
+    setVouchers(formattedVouchers);
+    setLoading(false);
+  } catch (err) {
+    console.error("Error fetching vouchers:", err);
+    setError(err.message || "Không thể lấy danh sách mã giảm giá");
+    setLoading(false);
+  }
+};
+
+  // Gọi API khi component mount
+  useEffect(() => {
+    fetchVouchers();
+  }, [retryCount]);
+
+  const handleDelete = async (id) => {
+    try {
+      setVouchers(vouchers.filter((voucher) => voucher.id !== id));
+    } catch (err) {
+      console.error("Error deleting voucher:", err);
+      alert("Không thể xóa mã giảm giá này. Vui lòng thử lại sau.");
+    }
   };
 
+  const handleRetry = () => {
+    setRetryCount(prev => prev + 1);
+  };
   const getMostUsedVoucher = () => {
+    if (!vouchers || vouchers.length === 0) return { name: "Không có", totalUsed: 0 };
     return vouchers.reduce((max, voucher) => (voucher.totalUsed > max.totalUsed ? voucher : max), vouchers[0]);
   };
 
@@ -80,33 +93,39 @@ export default function VoucherManagement() {
   // Hàm để đóng popup
   const handleClosePopup = () => {
     setIsPopupOpen(false);
+  };  // Hàm xử lý khi tạo mã giảm giá mới
+  const handleCreateVoucher = async (newVoucher) => {
+    try {
+      console.log("Voucher từ form:", newVoucher);
+      
+      // Gửi dữ liệu voucher tới API
+      const createdVoucher = await voucherApi.createVoucher(newVoucher);
+      console.log("Voucher từ API:", createdVoucher);
+      
+      // Chuyển đổi từ cấu trúc API sang cấu trúc component
+      const voucherToAdd = {
+        id: createdVoucher.id,
+        name: createdVoucher.voucherName || "Voucher mới",
+        code: createdVoucher.voucherCode || `CODE-${Date.now().toString().slice(-6)}`,
+        startDate: createdVoucher.startDate ? new Date(createdVoucher.startDate).toLocaleDateString() : "",
+        endDate: createdVoucher.endDate ? new Date(createdVoucher.endDate).toLocaleDateString() : "",
+        discountType: createdVoucher.voucherType === "PERCENT" ? "percentage" : "amount",
+        discountValue: createdVoucher.voucherType === "PERCENT" ? 
+          Number(createdVoucher.percentDiscount) : Number(createdVoucher.valueDiscount || 0),
+        minOrderValue: Number(createdVoucher.minPriceRequired || 0),
+        maxUsage: Number(createdVoucher.usesCount || 0),
+        maxUsagePerUser: 1,
+        totalUsed: 0 // Mã mới nên chưa có lượt sử dụng
+      };
+      
+      console.log("Voucher đã chuyển đổi:", voucherToAdd);
+      setVouchers(prev => [...prev, voucherToAdd]);
+      setIsPopupOpen(false); // Đóng popup sau khi tạo
+    } catch (err) {
+      console.error("Error creating voucher:", err);
+      alert("Không thể tạo mã giảm giá. Vui lòng thử lại sau.");
+    }
   };
-  // Hàm xử lý khi tạo mã giảm giá mới
-  const handleCreateVoucher = (newVoucher) => {
-    console.log("Voucher từ API:", newVoucher);
-    
-    // Chuyển đổi từ cấu trúc API sang cấu trúc component
-    const maxId = Math.max(...vouchers.map(v => v.id), 0);
-    const voucherToAdd = {
-      id: maxId + 1,
-      name: newVoucher.voucherName || "Voucher mới",
-      code: newVoucher.voucherCode || `CODE${maxId + 1}`,
-      startDate: newVoucher.startDate ? new Date(newVoucher.startDate).toLocaleDateString() : "",
-      endDate: newVoucher.endDate ? new Date(newVoucher.endDate).toLocaleDateString() : "",
-      discountType: newVoucher.voucherType === "PERCENT" ? "percentage" : "amount",
-      discountValue: newVoucher.voucherType === "PERCENT" ? 
-        Number(newVoucher.percentDiscount) : Number(newVoucher.valueDiscount || 0),
-      minOrderValue: Number(newVoucher.minPriceRequired || 0),
-      maxUsage: Number(newVoucher.usesCount || 0),
-      maxUsagePerUser: 1,
-      totalUsed: 0 // Mã mới nên chưa có lượt sử dụng
-    };
-    
-    console.log("Voucher đã chuyển đổi:", voucherToAdd);
-    setVouchers([...vouchers, voucherToAdd]);
-    setIsPopupOpen(false); // Đóng popup sau khi tạo
-  };
-
   // Hiển thị có điều kiện dựa trên selectedVoucherId
   return (
     <div className="p-6 bg-gray-100">
@@ -141,8 +160,8 @@ export default function VoucherManagement() {
             </div>
             <div className="bg-white p-4 rounded shadow">
               <p className="text-sm font-medium text-black">Mã giảm giá được sử dụng nhiều nhất</p>
-              <p className="text-2xl font-bold text-purple-500">{mostUsedVoucher.name}</p>
-              <p className="text-xs text-black">{mostUsedVoucher.totalUsed} lần</p>
+              <p className="text-2xl font-bold text-purple-500">{mostUsedVoucher?.name || "Không có"}</p>
+              <p className="text-xs text-black">{mostUsedVoucher?.totalUsed || 0} lần</p>
             </div>
             <div className="bg-white p-4 rounded shadow">
               <p className="text-sm font-medium text-black">Mã giảm giá sắp hết hạn</p>
@@ -151,57 +170,91 @@ export default function VoucherManagement() {
             </div>
           </div>
 
-          {/* Voucher Table */}
-          <div className="bg-white p-4 rounded shadow overflow-x-auto">
-            <table className="min-w-full border border-gray-200 table-fixed">
-              <thead>
-                <tr className="bg-gray-50">
-                  <th className="w-1/6 px-4 py-3 border-b text-black text-left font-semibold">Tên chương trình</th>
-                  <th className="w-1/6 px-4 py-3 border-b text-black text-left font-semibold">Mã voucher</th>
-                  <th className="w-1/6 px-4 py-3 border-b text-black text-left font-semibold">Thời gian</th>
-                  <th className="w-1/8 px-4 py-3 border-b text-black text-left font-semibold">Loại giảm giá</th>
-                  <th className="w-1/8 px-4 py-3 border-b text-black text-left font-semibold">Giá trị</th>
-                  <th className="w-1/8 px-4 py-3 border-b text-black text-left font-semibold">Tổng lượt sử dụng</th>
-                  <th className="w-1/8 px-4 py-3 border-b text-black text-center font-semibold">Hành động</th>
-                </tr>
-              </thead>
-              <tbody>
-                {vouchers.map((voucher) => (
-                  <tr 
-                    key={voucher.id} 
-                    className="border-t hover:bg-blue-50 transition cursor-pointer"
-                    onClick={() => handleVoucherClick(voucher.id)}
-                  >
-                    <td className="px-4 py-3 border-b text-black font-medium">{voucher.name}</td>
-                    <td className="px-4 py-3 border-b text-black">{voucher.code}</td>
-                    <td className="px-4 py-3 border-b text-black">
-                      {voucher.startDate} - {voucher.endDate}
-                    </td>
-                    <td className="px-4 py-3 border-b text-black">
-                      {voucher.discountType === "percentage" ? "Giảm %" : "Giảm tiền"}
-                    </td>                    
-                    <td className="px-4 py-3 border-b text-black">
-                      {voucher.discountType === "percentage"
-                        ? `${voucher.discountValue || 0}%`
-                        : `${(voucher.discountValue || 0).toLocaleString()} VND`}
-                    </td>
-                    <td className="px-4 py-3 border-b text-black text-center">{voucher.totalUsed}</td>
-                    <td className="px-4 py-3 border-b text-black text-center">
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleDelete(voucher.id);
-                        }}
-                        className="text-red-500 hover:underline font-medium"
+          {/* Error state */}
+          {error && (
+            <div className="mb-6 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+              <strong className="font-bold">Lỗi! </strong>
+              <span className="block sm:inline">{error}</span>
+              <button 
+                className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded ml-3"
+                onClick={handleRetry}
+              >
+                Thử lại
+              </button>
+            </div>
+          )}
+
+          {/* Loading state */}
+          {loading ? (
+            <div className="bg-white p-12 rounded shadow flex flex-col items-center justify-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mb-4"></div>
+              <p className="text-gray-600">Đang tải dữ liệu...</p>
+            </div>
+          ) : (
+            /* Voucher Table */
+            <div className="bg-white p-4 rounded shadow overflow-x-auto">
+              {vouchers.length > 0 ? (
+                <table className="min-w-full border border-gray-200 table-fixed">
+                  <thead>
+                    <tr className="bg-gray-50">
+                      <th className="w-1/6 px-4 py-3 border-b text-black text-left font-semibold">Tên chương trình</th>
+                      <th className="w-1/6 px-4 py-3 border-b text-black text-left font-semibold">Mã voucher</th>
+                      <th className="w-1/6 px-4 py-3 border-b text-black text-left font-semibold">Thời gian</th>
+                      <th className="w-1/8 px-4 py-3 border-b text-black text-left font-semibold">Loại giảm giá</th>
+                      <th className="w-1/8 px-4 py-3 border-b text-black text-left font-semibold">Giá trị</th>
+                      <th className="w-1/8 px-4 py-3 border-b text-black text-left font-semibold">Tổng lượt sử dụng</th>
+                      <th className="w-1/8 px-4 py-3 border-b text-black text-center font-semibold">Hành động</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {vouchers.map((voucher) => (
+                      <tr 
+                        key={voucher.id} 
+                        className="border-t hover:bg-blue-50 transition cursor-pointer"
+                        onClick={() => handleVoucherClick(voucher.id)}
                       >
-                        Xóa
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                        <td className="px-4 py-3 border-b text-black font-medium">{voucher.name}</td>
+                        <td className="px-4 py-3 border-b text-black">{voucher.code}</td>
+                        <td className="px-4 py-3 border-b text-black">
+                          {voucher.startDate} - {voucher.endDate}
+                        </td>
+                        <td className="px-4 py-3 border-b text-black">
+                          {voucher.discountType === "percentage" ? "Giảm %" : "Giảm tiền"}
+                        </td>                    
+                        <td className="px-4 py-3 border-b text-black">
+                          {voucher.discountType === "percentage"
+                            ? `${voucher.discountValue || 0}%`
+                            : `${(voucher.discountValue || 0).toLocaleString()} VND`}
+                        </td>
+                        <td className="px-4 py-3 border-b text-black text-center">{voucher.totalUsed}</td>
+                        <td className="px-4 py-3 border-b text-black text-center">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDelete(voucher.id);
+                            }}
+                            className="text-red-500 hover:underline font-medium"
+                          >
+                            Xóa
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              ) : (
+                <div className="py-12 text-center">
+                  <p className="text-gray-500">Không có mã giảm giá nào.</p>
+                  <button 
+                    onClick={handleOpenPopup}
+                    className="mt-4 bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+                  >
+                    Tạo mã giảm giá mới
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
 
           {/* Popup for adding new voucher */}
           {isPopupOpen && (
