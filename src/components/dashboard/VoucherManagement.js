@@ -216,7 +216,10 @@ export default function VoucherManagement() {
                   </button>
                 </div>
                 
-                <VoucherView onSubmit={handleCreateVoucher} onCancel={handleClosePopup} />
+                <VoucherView 
+                  onSubmit={handleCreateVoucher} 
+                  onCancel={handleClosePopup} 
+                />
               </div>
             </div>
           )}

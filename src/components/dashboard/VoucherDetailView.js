@@ -131,7 +131,7 @@ export default function VoucherDetailView({ voucherId, onBack }) {
             <div className="flex justify-between">
               <span className="text-black">Giá trị giảm giá:</span>
               <span className="font-medium text-black">
-                {voucherDetails.discountType === "percentage"
+                {!!voucherDetails.discountValue && voucherDetails.discountType === "percentage"
                   ? `${voucherDetails.discountValue}%`
                   : `${voucherDetails.discountValue.toLocaleString()} VND`}
               </span>
