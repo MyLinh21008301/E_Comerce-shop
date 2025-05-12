@@ -199,156 +199,146 @@ export default function Inventory() {
           {/* Overlay blur, không tối màu */}
           <div className="fixed inset-0 z-40 backdrop-blur-[3px] bg-white/40 transition-all"></div>
           <div className="fixed inset-0 z-50 flex items-center justify-center">
-            <div className="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-[26rem] border border-gray-100">
-              <h2 className="text-xl font-semibold text-black mb-6 text-left">Sản phẩm mới</h2>
-              <form onSubmit={handleSubmit}>
-                <div className="grid grid-cols-2 gap-4">
+            <div className="bg-white rounded-2xl shadow-2xl p-4 w-full max-w-[20.16rem] border border-gray-200">
+              <h2 className="text-lg font-semibold text-black mb-3 text-center">Thêm sản phẩm mới</h2>
+              <form onSubmit={handleSubmit} className="space-y-2">
+                <div>
+                  <label className="block text-black text-xs font-medium mb-1">Tên sản phẩm *</label>
+                  <input
+                    name="productName"
+                    value={formData.productName}
+                    onChange={handleInputChange}
+                    className="w-full border border-gray-300 rounded-lg px-1.5 py-0.5 text-black bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                    placeholder="Nhập tên sản phẩm"
+                    required
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-2">
                   <div>
-                    <label className="block text-black text-sm mb-1">Tên sản phẩm *</label>
-                    <input
-                      name="productName"
-                      value={formData.productName}
-                      onChange={handleInputChange}
-                      className="w-full border border-gray-300 rounded px-2 py-1 text-black bg-gray-50"
-                      placeholder="Nhập tên sản phẩm"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-black text-sm mb-1">Giá *</label>
+                    <label className="block text-black text-xs font-medium mb-1">Giá *</label>
                     <input
                       name="price"
                       value={formData.price}
                       onChange={handleInputChange}
-                      className="w-full border border-gray-300 rounded px-2 py-1 text-black bg-gray-50"
+                      className="w-full border border-gray-300 rounded-lg px-1.5 py-0.5 text-black bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:outline-none"
                       placeholder="Nhập giá"
                       required
                     />
                   </div>
                   <div>
-                    <label className="block text-black text-sm mb-1">Số lượng *</label>
+                    <label className="block text-black text-xs font-medium mb-1">Số lượng *</label>
                     <input
                       name="quantity"
                       type="number"
                       value={formData.quantity}
                       onChange={handleInputChange}
-                      className="w-full border border-gray-300 rounded px-2 py-1 text-black bg-gray-50"
+                      className="w-full border border-gray-300 rounded-lg px-1.5 py-0.5 text-black bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:outline-none"
                       placeholder="Nhập số lượng"
                       required
                     />
                   </div>
-                  <div>
-                    <label className="block text-black text-sm mb-1">Ảnh bìa *</label>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={(e) => setFormData({ ...formData, coverImage: e.target.files[0] })}
-                      className="w-full border border-gray-300 rounded px-2 py-1 text-black bg-gray-50"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-black text-sm mb-1">Ảnh sản phẩm (3-9 ảnh) *</label>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      multiple
-                      onChange={handleImageUpload}
-                      className="w-full border border-gray-300 rounded px-2 py-1 text-black bg-gray-50"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-black text-sm mb-1">Video *</label>
-                    <input
-                      type="file"
-                      accept="video/*"
-                      onChange={(e) => setFormData({ ...formData, video: e.target.files[0] })}
-                      className="w-full border border-gray-300 rounded px-2 py-1 text-black bg-gray-50"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-black text-sm mb-1">Tên loại phần 1</label>
-                    <input
-                      type="text"
-                      value={formData.firstCategoryName}
-                      onChange={(e) => setFormData({ ...formData, firstCategoryName: e.target.value })}
-                      className="w-full border border-gray-300 rounded px-2 py-1 text-black bg-gray-50"
-                      placeholder="Nhập tên loại phần 1"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-black text-sm mb-1">Loại phần 1</label>
-                    <div className="border border-gray-300 rounded px-2 py-1 text-black bg-gray-50">
-                      {formData.firstCategories.map((category, index) => (
-                        <span
-                          key={index}
-                          className="inline-block bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-xs mr-2 mb-2 cursor-pointer"
-                          onClick={() => handleRemoveCategory(index, "firstCategories")}
-                        >
-                          {category} &times;
-                        </span>
-                      ))}
-                      <input
-                        type="text"
-                        placeholder={`Nhập ${formData.firstCategoryName || "loại phần 1"} và nhấn Enter`}
-                        className="w-full border-none focus:outline-none"
-                        onKeyDown={(e) => handleAddCategory(e, "firstCategories")}
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <label className="block text-black text-sm mb-1">Tên loại phần 2</label>
+                </div>
+                <div>
+                  <label className="block text-black text-xs font-medium mb-1">Ảnh bìa *</label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => setFormData({ ...formData, coverImage: e.target.files[0] })}
+                    className="w-full border border-gray-300 rounded-lg px-1.5 py-0.5 text-black bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-black text-xs font-medium mb-1">Ảnh sản phẩm (3-9 ảnh) *</label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    onChange={handleImageUpload}
+                    className="w-full border border-gray-300 rounded-lg px-1.5 py-0.5 text-black bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="block text-black text-xs font-medium mb-1">Video *</label>
+                  <input
+                    type="file"
+                    accept="video/*"
+                    onChange={(e) => setFormData({ ...formData, video: e.target.files[0] })}
+                    className="w-full border border-gray-300 rounded-lg px-1.5 py-0.5 text-black bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-black text-xs font-medium mb-1">Tên loại phần 1</label>
+                  <input
+                    type="text"
+                    value={formData.firstCategoryName}
+                    onChange={(e) => setFormData({ ...formData, firstCategoryName: e.target.value })}
+                    className="w-full border border-gray-300 rounded-lg px-1.5 py-0.5 text-black bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                    placeholder="Nhập tên loại phần 1"
+                  />
+                </div>
+                <div>
+                  <label className="block text-black text-xs font-medium mb-1">Loại phần 1</label>
+                  <div className="border border-gray-300 rounded-lg px-1.5 py-0.5 text-black bg-gray-50">
+                    {formData.firstCategories.map((category, index) => (
+                      <span
+                        key={index}
+                        className="inline-block bg-blue-100 text-blue-700 px-1 py-0.5 rounded-full text-xs mr-1 mb-1 cursor-pointer"
+                        onClick={() => handleRemoveCategory(index, "firstCategories")}
+                      >
+                        {category} &times;
+                      </span>
+                    ))}
                     <input
                       type="text"
-                      value={formData.secondCategoryName}
-                      onChange={(e) => setFormData({ ...formData, secondCategoryName: e.target.value })}
-                      className="w-full border border-gray-300 rounded px-2 py-1 text-black bg-gray-50"
-                      placeholder="Nhập tên loại phần 2"
+                      placeholder={`Nhập ${formData.firstCategoryName || "loại phần 1"} và nhấn Enter`}
+                      className="w-full border-none focus:outline-none"
+                      onKeyDown={(e) => handleAddCategory(e, "firstCategories")}
                     />
-                  </div>
-                  <div>
-                    <label className="block text-black text-sm mb-1">Loại phần 2</label>
-                    <div className="border border-gray-300 rounded px-2 py-1 text-black bg-gray-50">
-                      {formData.secondCategories.map((category, index) => (
-                        <span
-                          key={index}
-                          className="inline-block bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs mr-2 mb-2 cursor-pointer"
-                          onClick={() => handleRemoveCategory(index, "secondCategories")}
-                        >
-                          {category} &times;
-                        </span>
-                      ))}
-                      <input
-                        type="text"
-                        placeholder={`Nhập ${formData.secondCategoryName || "loại phần 2"} và nhấn Enter`}
-                        className="w-full border-none focus:outline-none"
-                        onKeyDown={(e) => handleAddCategory(e, "secondCategories")}
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <label className="block text-black text-sm mb-1">Sản phẩm mới</label>
-                    <button
-                      type="button"
-                      onClick={toggleIsNew}
-                      className={`px-4 py-1 rounded ${formData.isNew ? 'bg-green-600 text-white' : 'bg-gray-300 text-black'}`}
-                    >
-                      {formData.isNew ? 'Đánh dấu là cũ' : 'Đánh dấu là mới'}
-                    </button>
                   </div>
                 </div>
-                <div className="flex justify-end gap-2 mt-6">
+                <div>
+                  <label className="block text-black text-xs font-medium mb-1">Tên loại phần 2</label>
+                  <input
+                    type="text"
+                    value={formData.secondCategoryName}
+                    onChange={(e) => setFormData({ ...formData, secondCategoryName: e.target.value })}
+                    className="w-full border border-gray-300 rounded-lg px-1.5 py-0.5 text-black bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                    placeholder="Nhập tên loại phần 2"
+                  />
+                </div>
+                <div>
+                  <label className="block text-black text-xs font-medium mb-1">Loại phần 2</label>
+                  <div className="border border-gray-300 rounded-lg px-1.5 py-0.5 text-black bg-gray-50">
+                    {formData.secondCategories.map((category, index) => (
+                      <span
+                        key={index}
+                        className="inline-block bg-green-100 text-green-700 px-1 py-0.5 rounded-full text-xs mr-1 mb-1 cursor-pointer"
+                        onClick={() => handleRemoveCategory(index, "secondCategories")}
+                      >
+                        {category} &times;
+                      </span>
+                    ))}
+                    <input
+                      type="text"
+                      placeholder={`Nhập ${formData.secondCategoryName || "loại phần 2"} và nhấn Enter`}
+                      className="w-full border-none focus:outline-none"
+                      onKeyDown={(e) => handleAddCategory(e, "secondCategories")}
+                    />
+                  </div>
+                </div>
+                <div className="flex justify-end gap-2 mt-3">
                   <button
                     type="button"
-                    className="px-4 py-1 rounded border border-gray-300 bg-white text-black hover:bg-gray-100"
+                    className="px-2 py-0.5 rounded-lg border border-gray-300 bg-white text-black hover:bg-gray-100 focus:ring-2 focus:ring-gray-300"
                     onClick={() => setShowModal(false)}
                   >
                     Hủy
                   </button>
                   <button
                     type="submit"
-                    className="px-4 py-1 rounded bg-blue-600 text-white hover:bg-blue-700"
+                    className="px-2 py-0.5 rounded-lg bg-blue-600 text-white hover:bg-blue-700 focus:ring-2 focus:ring-blue-500"
                   >
                     Thêm sản phẩm
                   </button>
