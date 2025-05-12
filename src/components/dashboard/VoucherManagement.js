@@ -81,18 +81,28 @@ export default function VoucherManagement() {
   const handleClosePopup = () => {
     setIsPopupOpen(false);
   };
-
   // Hàm xử lý khi tạo mã giảm giá mới
   const handleCreateVoucher = (newVoucher) => {
-    // Thực hiện logic tạo voucher (gọi API, etc.)
-    // Mô phỏng thêm voucher mới vào danh sách
+    console.log("Voucher từ API:", newVoucher);
+    
+    // Chuyển đổi từ cấu trúc API sang cấu trúc component
     const maxId = Math.max(...vouchers.map(v => v.id), 0);
     const voucherToAdd = {
-      ...newVoucher,
       id: maxId + 1,
+      name: newVoucher.voucherName || "Voucher mới",
+      code: newVoucher.voucherCode || `CODE${maxId + 1}`,
+      startDate: newVoucher.startDate ? new Date(newVoucher.startDate).toLocaleDateString() : "",
+      endDate: newVoucher.endDate ? new Date(newVoucher.endDate).toLocaleDateString() : "",
+      discountType: newVoucher.voucherType === "PERCENT" ? "percentage" : "amount",
+      discountValue: newVoucher.voucherType === "PERCENT" ? 
+        Number(newVoucher.percentDiscount) : Number(newVoucher.valueDiscount || 0),
+      minOrderValue: Number(newVoucher.minPriceRequired || 0),
+      maxUsage: Number(newVoucher.usesCount || 0),
+      maxUsagePerUser: 1,
       totalUsed: 0 // Mã mới nên chưa có lượt sử dụng
     };
     
+    console.log("Voucher đã chuyển đổi:", voucherToAdd);
     setVouchers([...vouchers, voucherToAdd]);
     setIsPopupOpen(false); // Đóng popup sau khi tạo
   };
@@ -169,11 +179,11 @@ export default function VoucherManagement() {
                     </td>
                     <td className="px-4 py-3 border-b text-black">
                       {voucher.discountType === "percentage" ? "Giảm %" : "Giảm tiền"}
-                    </td>
+                    </td>                    
                     <td className="px-4 py-3 border-b text-black">
                       {voucher.discountType === "percentage"
-                        ? `${voucher.discountValue}%`
-                        : `${voucher.discountValue.toLocaleString()} VND`}
+                        ? `${voucher.discountValue || 0}%`
+                        : `${(voucher.discountValue || 0).toLocaleString()} VND`}
                     </td>
                     <td className="px-4 py-3 border-b text-black text-center">{voucher.totalUsed}</td>
                     <td className="px-4 py-3 border-b text-black text-center">
