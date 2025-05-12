@@ -15,6 +15,7 @@ export default function Login() {
   const [error, setError] = useState("");
   const router = useRouter();
   const { login } = useAuth();
+  const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8080";
 
   useEffect(() =>{
     localStorage.setItem("accessToken", defaultToken);
@@ -27,15 +28,43 @@ export default function Login() {
     // Giả lập kiểm tra đăng nhập
     if (username === "admin" && password === "123") {
       // Đăng nhập thành công
+
+
       login({
         username: username,
-        name: "Admin User",
+        name: "Admin User", //chinh lai sang fullName
         role: "admin"
       });
+      
       router.push('/home');
-    } else {
-      setError("Tên đăng nhập hoặc mật khẩu không chính xác");
     }
+
+    //   fetch(`${backendUrl}/api/users/me`, {
+    //     method: 'GET',
+    //     headers: {
+    //       'Authorization': `Bearer ${defaultToken}`,
+    //       'Content-Type': 'application/json'
+    //     }
+    //   }).then((response) => {
+    //     if (response.ok) {
+    //       return response.json();
+    //     } else {
+    //       throw new Error('Failed to fetch user data');
+    //     }
+    //   })
+    //   .then((data) => {
+    //     login(data);
+    //     router.push('/home');
+    //   }
+    //   ).catch((error) => {
+    //     console.error('Error:', error);
+    //     setError("Đã xảy ra lỗi khi tải thông tin người dùng");
+    //   });
+    //   // const 
+    //   // router.push('/home');
+    // } else {
+    //   setError("Tên đăng nhập hoặc mật khẩu không chính xác");
+    // }
   };
 
   return (

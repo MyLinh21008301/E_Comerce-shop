@@ -25,3 +25,5 @@ export const CATEGORIES = [
   { id: 9, name: "Dép Nam", image: "/images/categories/dep-nam.png" },
   { id: 10, name: "Quần Đùi Nữ", image: "/images/categories/quan-dui-nu.png" },
 ]; 
+
+export const BACKEND_URL = "https://exclusion-info-pcs-tsunami.trycloudflare.com"; // URL của backend API

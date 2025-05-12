@@ -26,6 +26,7 @@ export default function Inventory() {
     firstCategoryName: "", // Added name for first category
     secondCategoryName: "", // Added name for second category
     isNew: false,
+    isVisible: true, // Added visibility state
   });
 
   const handleImageChange = (e) => {
@@ -327,6 +328,25 @@ export default function Inventory() {
                       onKeyDown={(e) => handleAddCategory(e, "secondCategories")}
                     />
                   </div>
+                </div>
+                <div>
+                  <label className="block text-black text-xs font-medium mb-1">Hiển thị trên trang web</label>
+                  <input
+                    type="checkbox"
+                    checked={formData.isVisible}
+                    onChange={(e) => setFormData({ ...formData, isVisible: e.target.checked })}
+                    className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-black text-xs font-medium mb-1">Trạng thái sản phẩm mới</label>
+                  <button
+                    type="button"
+                    onClick={toggleIsNew}
+                    className={`px-2 py-0.5 rounded-lg border ${formData.isNew ? 'bg-green-600 text-white' : 'bg-gray-300 text-black'} hover:bg-green-700 focus:ring-2 focus:ring-green-500`}
+                  >
+                    {formData.isNew ? 'Đã đánh dấu là sản phẩm mới' : 'Đánh dấu là sản phẩm mới'}
+                  </button>
                 </div>
                 <div className="flex justify-end gap-2 mt-3">
                   <button
