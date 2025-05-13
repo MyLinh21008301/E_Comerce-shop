@@ -1,13 +1,14 @@
 'use client';
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useLayoutEffect, useEffect } from "react";
 import { mockProducts } from '@/data/mockData';
 import { CATEGORIES } from '@/utils/constants';
 import ProductDetailView from './ProductDetailView'; // Import component mới
 import { useAuth } from '@/context/AuthContext';
 
 export default function Inventory() {
-  const { user } = useAuth();
+  const { user, authState } = useAuth();
+  const accessToken = authState.token;
 
   const [showModal, setShowModal] = useState(false);
   const [image, setImage] = useState(null);
@@ -28,8 +29,65 @@ export default function Inventory() {
     isNew: false,
     isVisible: true, // Added visibility state
   });
+  const [products, setProducts] = useState({
+    content: [],
+  });
+
 
   const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8080";
+
+  
+
+  useEffect(() => {
+    const handleFetchProducts = async () => {
+      // const accessToken = localStorage.getItem("accessToken");
+      if (user == accessToken){
+        return;
+      }
+
+      try {
+        const response = await fetch(`/api/products/vendors/${user.userId}`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch products");
+        }
+
+        const data = await response.json();
+        console.log("Fetched products:", data);
+        setProducts(data);
+        // console.log("Fetched products:", data);
+
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    }
+    handleFetchProducts();
+
+    
+  },[authState])
+
+  useEffect(() => {
+    const handleEscape = (event) => {
+      if (event.key === 'Escape' && showModal) {
+        setShowModal(false);
+      }
+    };
+
+    // Thêm sự kiện keydown khi modal mở
+    if (showModal) {
+      document.addEventListener('keydown', handleEscape);
+    }
+
+    // Xóa sự kiện khi modal đóng hoặc component unmount
+    return () => {
+      document.removeEventListener('keydown', handleEscape);
+    };
+  }, [showModal]);
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -59,6 +117,8 @@ export default function Inventory() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    console.log("FormData before submit:", formData);
+
     const { productName, price, quantity, coverImage, images, video } = formData;
 
     // Kiểm tra các trường bắt buộc
@@ -80,11 +140,11 @@ export default function Inventory() {
     // Tạo FormData
     const formDataToSend = new FormData();
     formDataToSend.append("productName", productName);
-    formDataToSend.append("price", price);
-    formDataToSend.append("stock", quantity);
+    formDataToSend.append("price", parseFloat(price));
+    formDataToSend.append("stock", parseInt(quantity));
     formDataToSend.append("coverImage", coverImage);
     formDataToSend.append("video", video);
-    formDataToSend.append("vendorId", formData.userId);
+    formDataToSend.append("vendorId", user.userId);
     formDataToSend.append("firstCategoryName", formData.firstCategoryName);
     formDataToSend.append("secondCategoryName", formData.secondCategoryName);
     formDataToSend.append("isNew", formData.isNew);
@@ -95,13 +155,15 @@ export default function Inventory() {
     const accessToken = localStorage.getItem("accessToken");
 
     // Thêm danh sách ảnh
-    images.forEach((image, index) => {
-      formDataToSend.append(`images[${index}]`, image);
+    images.forEach((image) => {
+      formDataToSend.append("images", image);
     });
+
+    console.log("FormData:", formDataToSend);
 
     try {
       // Gửi dữ liệu bằng fetch
-      const response = await fetch(`${backendUrl}/api/products`, {
+      const response = await fetch(`/api/products`, {
         method: "POST",
         body: formDataToSend,
         headers: {
@@ -110,7 +172,8 @@ export default function Inventory() {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to upload product");
+        const errorData = await response.json(); // Đọc lỗi chi tiết từ server
+        throw new Error(errorData.message || "Failed to upload product");
       }
 
       const result = await response.json();
@@ -171,6 +234,14 @@ export default function Inventory() {
     setFormData((prevData) => ({ ...prevData, isNew: !prevData.isNew }));
   };
 
+  if(user == null) {
+    return <div className="text-center text-red-500">Vui lòng đăng nhập để xem trang này.</div>;
+  }
+
+  if (!products.content){
+    return <div className="text-center text-red-500">Đang loading</div>;
+  }
+
   return (
     <div className="relative">
       {/* Thanh tìm kiếm và Tổng quan luôn hiển thị */}
@@ -217,23 +288,26 @@ export default function Inventory() {
           <table className="w-full text-left border-t">
             <thead>
               <tr className="text-gray-600">
-                <th className="py-3 text-black">Sản phẩm</th>
+                <th className="py-3 text-black">Hình ảnh</th>
+                <th className="py-3 text-black">Tên sản phẩm</th>
                 <th className="py-3 text-black">Giá nhập</th>
                 <th className="py-3 text-black">Số lượng</th>
-                <th className="py-3 text-black">Loại</th>
                 <th className="py-3 text-black">Trạng thái</th>
               </tr>
             </thead>
             <tbody>
-              {mockProducts.map((item) => (
-                <tr key={item.id} className="border-t hover:bg-blue-50 transition cursor-pointer" onClick={() => handleProductClick(item.id)}>
-                  <td className="py-3 text-black font-medium flex items-center gap-2">
-                    <img src={item.image} alt={item.name} className="w-10 h-10 object-cover rounded" />
-                    {item.name}
+              {products.content.map((item) => (
+                <tr key={item.productId} className="border-t hover:bg-blue-50 transition cursor-pointer" onClick={() => handleProductClick(item.productId)}>
+                  <td className="py-3 text-black font-medium items-center gap-2">
+                    <img src={item.coverImage} alt={item.productName} className="w-10 h-10 object-cover rounded" />
+                  </td>
+                  <td className="py-3 text-black font-medium items-center gap-2">
+                    
+                    {item.productName}
                   </td>
                   <td className="py-3 text-black">₫{item.price.toLocaleString()}</td>
                   <td className="py-3 text-black">{item.stock}</td>
-                  <td className="py-3 text-black">{CATEGORIES.find(c => item.name.toLowerCase().includes(c.name.toLowerCase()))?.name || 'Khác'}</td>
+                  {/* <td className="py-3 text-black">{CATEGORIES.find(c => item.name.toLowerCase().includes(c.name.toLowerCase()))?.name || 'Khác'}</td> */}
                   <td className="py-3">
                     {item.stock > 10 ? (
                       <span className="px-2 py-1 rounded bg-green-100 text-green-700 text-xs">Còn hàng</span>
@@ -248,9 +322,15 @@ export default function Inventory() {
             </tbody>
           </table>
           <div className="flex justify-between items-center mt-4">
-            <button className="px-4 py-2 bg-white border border-gray-300 text-black rounded hover:bg-gray-100 transition">Trước</button>
-            <span className="text-black">Trang 1 trong 10</span>
-            <button className="px-4 py-2 bg-white border border-gray-300 text-black rounded hover:bg-gray-100 transition">Sau</button>
+            <button 
+              className={`px-4 py-2 bg-white border border-gray-300 text-black rounded hover:bg-gray-100 transition ${products.page == 0 && "cursor-not-allowed "}` }
+              disabled={products.page == 0}
+              >Trước</button>
+            <span className="text-black">Trang {products.page + 1} trong {products.totalPages}</span>
+            <button 
+              className={`px-4 py-2 bg-white border border-gray-300 text-black rounded hover:bg-gray-100 transition ${products.page + 1 == products.totalPages && "cursor-not-allowed "}`} 
+              disabled={products.page + 1 == products.totalPages}
+            >Sau</button>
           </div>
         </div>
       )}
