@@ -34,9 +34,6 @@ export default function Inventory() {
   });
 
 
-
-  
-
   useEffect(() => {
     const handleFetchProducts = async () => {
       // const accessToken = localStorage.getItem("accessToken");
@@ -161,7 +158,6 @@ export default function Inventory() {
     formDataToSend.append("isVisible", formData.isVisible);
     formDataToSend.append("firstCategories", JSON.stringify(formData.firstCategories));
     formDataToSend.append("secondCategories", JSON.stringify(formData.secondCategories));
-
 
     // Thêm danh sách ảnh
     images.forEach((image) => {

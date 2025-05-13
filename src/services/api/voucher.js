@@ -2,13 +2,14 @@
 import { BACKEND_URL, API_ENDPOINTS } from '@/utils/constants';
 
 export const voucherApi = {
-  getVouchers: async () => {
+
+  getVouchers: async (userId, authToken) => {
   try {
-    const response = await fetch(`${BACKEND_URL}${API_ENDPOINTS.VOUCHERS.LIST}`, {
+    const response = await fetch(`/api/vouchers/vendor/${userId}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+        'Authorization': `Bearer ${authToken}`,
       },
     });
 

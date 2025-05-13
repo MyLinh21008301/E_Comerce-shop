@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import VoucherDetailView from "./VoucherDetailView";
 import VoucherView from "./VoucherView";
 import { voucherApi } from "@/services/api/voucher";
+import { useAuth } from "@/context/AuthContext";
 
 export default function VoucherManagement() {
   const [vouchers, setVouchers] = useState([]);
@@ -15,6 +16,7 @@ export default function VoucherManagement() {
   const [selectedVoucherId, setSelectedVoucherId] = useState(null);
   // State để kiểm soát hiển thị popup
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const { user, authState } = useAuth();
 
   // Hàm để lấy dữ liệu từ API
   const fetchVouchers = async () => {
@@ -22,8 +24,10 @@ export default function VoucherManagement() {
     setLoading(true);
     setError(null);
     
+    console.log("user: {}",user)
+
     // Gọi API để lấy dữ liệu - có thể trả về mảng hoặc null hoặc lỗi
-    const data = await voucherApi.getVouchers();
+    const data = await voucherApi.getVouchers(user.userId, authState.token);
     
     // data đã được đảm bảo là mảng từ hàm voucherApi.getVouchers()
     // nên chúng ta có thể map trực tiếp
@@ -54,7 +58,7 @@ export default function VoucherManagement() {
   // Gọi API khi component mount
   useEffect(() => {
     fetchVouchers();
-  }, [retryCount]);
+  }, [ user, authState]);
 
   const handleDelete = async (id) => {
     try {
