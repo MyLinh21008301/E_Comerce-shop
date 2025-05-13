@@ -26,6 +26,10 @@ export default function VoucherManagement() {
     
     console.log("user: {}",user)
 
+    if (!user){
+      return;
+    }
+
     // Gọi API để lấy dữ liệu - có thể trả về mảng hoặc null hoặc lỗi
     const data = await voucherApi.getVouchers(user.userId, authState.token);
     
@@ -130,6 +134,11 @@ export default function VoucherManagement() {
       alert("Không thể tạo mã giảm giá. Vui lòng thử lại sau.");
     }
   };
+
+  if (!user) {
+    return <div className="p-6 bg-gray-100">Vui lòng đăng nhập để xem mã giảm giá.</div>;
+  }
+
   // Hiển thị có điều kiện dựa trên selectedVoucherId
   return (
     <div className="p-6 bg-gray-100">
