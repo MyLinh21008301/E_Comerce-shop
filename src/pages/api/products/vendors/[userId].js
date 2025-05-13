@@ -2,9 +2,14 @@ export default async function handler(req, res) {
   if (req.method !== 'GET') {
     return res.status(405).json({ message: 'Method Not Allowed' });
   }
-  const { userId } = req.query;
-  const url = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/products/vendors/${userId}`;
-  console.log('URL:', url);
+  const { userId, page, size } = req.query;
+  const url = new URL(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/products/vendors/${userId}`);
+  
+  
+  // Add query parameters to URL
+  url.searchParams.append('page', page || 0);
+  url.searchParams.append('size', size || 10);
+  console.log('URL:', url.toString());
   console.log('Authorization:', req.headers.authorization);
   fetch(url, {
     method: 'GET',
