@@ -1,32 +1,73 @@
 // src/components/dashboard/ProductDetailView.js
 "use client";
-import { useEffect, useState } from 'react';
-import { mockProducts } from '@/data/mockData';
-import { CATEGORIES } from '@/utils/constants';
+import { useEffect, useState } from "react";
+import { mockProducts } from "@/data/mockData";
+import { CATEGORIES } from "@/utils/constants";
+import { useAuth } from "@/context/AuthContext";
 
 // Dữ liệu nhà cung cấp (ví dụ)
 const supplierInfo = {
-  name: 'Ronald Martin',
-  phone: '98789 86757',
+  name: "Ronald Martin",
+  phone: "98789 86757",
 };
 
 export default function ProductDetailView({ productId, onBack }) {
+  const { user, authState } = useAuth();
   const [product, setProduct] = useState(null);
-  const [activeTab, setActiveTab] = useState('Tổng quan');
+  const [activeTab, setActiveTab] = useState("Tổng quan");
+  const [visibility, setVisibility] = useState(false);
+
+  const handleToggleVisibility = async (productId) => {
+    const response = await fetch(`/api/products/${productId}/${visibility ? 'hide' : 'show'}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${authState.token}`,
+      },
+    });
+    if (!response.ok) {
+      console.error("Error updating visibility:", response.statusText);
+      return;
+    }
+    
+    setVisibility(x => !x);
+  }
+    
 
   useEffect(() => {
-    const found = mockProducts.find(p => p.id === parseInt(productId));
-    setProduct(found);
+    const fetchProduct = async () => {
+      const productData = await fetch(`/api/products/${productId}`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${authState.token}`,
+        },
+      });
+      if (!productData.ok) {
+        console.error("Error fetching product:", productData.statusText);
+        return;
+      }
+      const productJson = await productData.json();
+      console.log("Product data:", productJson);
+      setVisibility(productJson.show);
+      setProduct(productJson);
+    };
+    fetchProduct();
   }, [productId]);
 
-  if (!product) return <div className="p-8 text-center text-gray-500">Đang tải sản phẩm...</div>;
+  if (!product)
+    return (
+      <div className="p-8 text-center text-gray-500">Đang tải sản phẩm...</div>
+    );
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-sm">
-       {/* Nút quay lại */}
-       <button onClick={onBack} className="mb-4 text-blue-600 hover:underline flex items-center gap-1">
-         <i className="fas fa-arrow-left text-xs"></i> Quay lại danh sách
-       </button>
+      {/* Nút quay lại */}
+      <button
+        onClick={onBack}
+        className="mb-4 text-blue-600 hover:underline flex items-center gap-1"
+      >
+        <i className="fas fa-arrow-left text-xs"></i> Quay lại danh sách
+      </button>
 
       {/* Header và nút hành động */}
       <div className="flex items-center justify-between mb-4">
@@ -43,11 +84,15 @@ export default function ProductDetailView({ productId, onBack }) {
 
       {/* Tabs */}
       <div className="flex border-b mb-6">
-        {['Tổng quan', 'Nhập hàng', 'Điều chỉnh', 'Lịch sử'].map(tab => (
+        {["Tổng quan", "Nhập hàng", "Điều chỉnh", "Lịch sử"].map((tab) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
-            className={`mr-8 py-2 px-1 border-b-2 text-sm ${activeTab === tab ? 'border-blue-600 text-blue-600 font-medium' : 'border-transparent text-gray-500'}`}
+            className={`mr-8 py-2 px-1 border-b-2 text-sm ${
+              activeTab === tab
+                ? "border-blue-600 text-blue-600 font-medium"
+                : "border-transparent text-gray-500"
+            }`}
           >
             {tab}
           </button>
@@ -56,78 +101,144 @@ export default function ProductDetailView({ productId, onBack }) {
 
       {/* Nội dung tab */}
       <div>
-        {activeTab === 'Tổng quan' && (
+        {activeTab === "Tổng quan" && (
           <div className="grid grid-cols-3 gap-6">
             {/* Cột thông tin chính và nhà cung cấp */}
             <div className="col-span-2">
               {/* Thông tin chính */}
               <div className="mb-8">
-                <h3 className="text-black font-semibold mb-4 text-base">Thông tin chính</h3>
+                <h3 className="text-black font-semibold mb-4 text-base">
+                  Thông tin chính
+                </h3>
                 <div className="grid grid-cols-2 gap-y-3 text-sm">
                   <div className="text-gray-500">Tên sản phẩm</div>
-                  <div className="text-black">{product.name}</div>
+                  <div className="text-black">{product.productName}</div>
                   <div className="text-gray-500">Mã sản phẩm</div>
-                  <div className="text-black">{product.id}</div>
-                  <div className="text-gray-500">Loại sản phẩm</div>
-                  <div className="text-black">{CATEGORIES.find(c => product.name.toLowerCase().includes(c.name.toLowerCase()))?.name || 'Khác'}</div>
+                  <div className="text-black">{product.productId}</div>
+                  <div className="text-gray-500">Giá thành sản phẩm</div>
+                  <div className="text-black">{product.price}</div>
+                  <div className="text-gray-500">Đánh giá</div>
+                  <div className="text-black">
+                    {product.ratingAvg
+                      ? product.ratingAvg.toFixed(1)
+                      : "Chưa có đánh giá"}
+                  </div>
                   <div className="text-gray-500">Giá trị giới hạn</div>
-                  <div className="text-black">12</div>
-                </div>
-              </div>
-              {/* Thông tin nhà cung cấp */}
-              <div>
-                <h3 className="text-black font-semibold mb-4 text-base">Thông tin nhà cung cấp</h3>
-                <div className="grid grid-cols-2 gap-y-3 text-sm">
-                  <div className="text-gray-500">Tên nhà cung cấp</div>
-                  <div className="text-black">{supplierInfo.name}</div>
-                  <div className="text-gray-500">Số điện thoại</div>
-                  <div className="text-black">{supplierInfo.phone}</div>
+                  <div className="text-black">{product.stock}</div>
+                  <div className="text-gray-500">Số lượng bán ra</div>
+                  <div className="text-black">{product.soldCount}</div>
+                  <div className="text-gray-500">Chú thích</div>
+                  <div className="text-black">{product.description}</div>
+                  <div className="text-gray-500">Thương hiệu</div>
+                  <div className="text-black">{product.brand}</div>
+                  <div className="text-gray-500">Danh mục 1 : {product.firstCategoryName}</div>
+                  <div className="text-black">
+                    {product.firstCategories.map((category) => (
+                      <span
+                        key={category}
+                        className="inline-block bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded"
+                      >
+                        {category}
+                      </span>
+                    ))}
+                  </div>
+                  <div className="text-gray-500">Danh mục 2 : {product.secondCategoryName}</div>
+                  <div className="text-black">
+                    {product.secondCategories.map((category) => (
+                      <span
+                        key={category}
+                        className="inline-block bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded"
+                      >
+                        {category}
+                      </span>
+                    ))}
+                  </div>
+
+                  {/* Thêm trạng thái sản phẩm mới */}
+                  <div className="text-gray-500">Trạng thái sản phẩm</div>
+                  <div className="text-black">{product.new ? "Mới" : "Cũ"}</div>
+                  {/* Thêm toggle hiển thị sản phẩm */}
+                  <div className="text-gray-500">Hiển thị</div>
+                  <div className="text-black">
+                    <label className="relative inline-flex items-center cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={visibility}
+                        onChange={() =>
+                          handleToggleVisibility(product.productId)
+                        }
+                        className="sr-only peer"
+                      />
+                      <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                      <span className="ml-2 text-sm font-medium text-gray-900">
+                        {visibility ? "Đang hiển thị" : "Đang ẩn"}
+                      </span>
+                    </label>
+                  </div>
                 </div>
               </div>
             </div>
+
             {/* Cột ảnh và số liệu */}
             <div className="col-span-1">
+              {/* Ảnh sản phẩm*/}
+              <div className="mb-8">
+                <h3 className="text-black font-semibold mb-4 text-base">
+                  Ảnh chính của sản phẩm
+                </h3>
+                <div className="grid grid-cols-3 gap-4">
+                  <div className="border-2 border-dashed border-gray-300 rounded p-1">
+                    <img
+                      src={product.coverImage}
+                      alt={`Ảnh sản phẩm`}
+                      className="w-full h-36 object-cover rounded"
+                    />
+                  </div>
+                </div>
+              </div>
+
               {/* Media Gallery */}
               <div className="mb-8">
-                <h3 className="text-black font-semibold mb-4 text-base">Thư viện hình ảnh và video</h3>
+                <h3 className="text-black font-semibold mb-4 text-base">
+                  Thư viện hình ảnh
+                </h3>
                 <div className="grid grid-cols-3 gap-4">
-                  {[...Array(9)].map((_, index) => (
-                    <div key={index} className="border-2 border-dashed border-gray-300 rounded p-1">
+                  {product.imageList.map((data, index) => (
+                    <div
+                      key={index}
+                      className="border-2 border-dashed border-gray-300 rounded p-1"
+                    >
                       <img
-                        src={`https://picsum.photos/400/400?random=${index + 1}`}
+                        src={data}
                         alt={`Sample ${index + 1}`}
-                        className="w-full h-full object-cover rounded"
+                        className="w-full h-36 object-cover rounded"
                       />
                     </div>
                   ))}
                 </div>
               </div>
-              {/* Số liệu kho */}
-              <div className="space-y-2 text-sm">
-                <div className="flex justify-between items-center">
-                  <span className="text-black">Opening Stock</span>
-                  <span className="text-black font-semibold">40</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-500">Remaining Stock</span>
-                  <span className="text-black font-semibold">{product.stock}</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-500">On the way</span>
-                  <span className="text-black font-semibold">15</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-500">Giá trị giới hạn</span>
-                  <span className="text-black font-semibold">12</span>
+              {/* Video sản phẩm */}
+              <div className="mb-8">
+                <h3 className="text-black font-semibold mb-4 text-base">
+                  Video sản phẩm
+                </h3>
+                <div className="grid grid-cols-3 gap-4">
+                  <video
+                    controls
+                    className="w-full h-80 object-cover rounded col-span-3"
+                    src={product.video}
+                  />
                 </div>
               </div>
             </div>
           </div>
         )}
         {/* Placeholder cho các tab khác */}
-        {activeTab !== 'Tổng quan' && (
+        {activeTab !== "Tổng quan" && (
           <div className="py-4">
-            <p className="text-gray-500">Thông tin {activeTab.toLowerCase()} sẽ hiển thị ở đây</p>
+            <p className="text-gray-500">
+              Thông tin {activeTab.toLowerCase()} sẽ hiển thị ở đây
+            </p>
           </div>
         )}
       </div>

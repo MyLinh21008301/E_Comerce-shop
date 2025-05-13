@@ -1,6 +1,7 @@
 // src/app/dashboard/layout.js
 "use client"; // Layouts trong App Router cần 'use client' nếu có hooks hoặc tương tác
 
+import AuthStatus from '@/components/AuthStatus';
 import { useAuth } from '@/context/AuthContext';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation'; // Import useRouter
@@ -97,7 +98,7 @@ export default function DashboardLayout({ children }) {
                 alt="User Avatar"
                 className="w-8 h-8 rounded-full object-cover cursor-pointer"
               />
-              <span className="text-gray-800 font-medium">{user?.fullName||"nguoi dung"}</span> {/* Thay bằng tên user đang đăng nhập */}
+             <AuthStatus/>
             </div>
           </div>
         </div>

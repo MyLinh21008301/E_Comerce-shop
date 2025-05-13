@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Silent Check SSO</title>
+  <script src="https://cdn.jsdelivr.net/npm/keycloak-js@latest/dist/keycloak.min.js"></script>
+  <script>
+    const keycloak = Keycloak({
+      url: window.location.origin + '/auth',
+      realm: 'demo',
+      clientId: 'frontend-client'
+    })
+
+    keycloak.init({ onLoad: 'check-sso', silentCheckSsoRedirectUri: window.location.href })
+      .catch(() => {
+        window.parent.postMessage('SSO_ERROR', '*')
+      })
+  </script>
+</head>
+<body>
+  <p>Silent authentication in progress...</p>
+</body>
+</html>

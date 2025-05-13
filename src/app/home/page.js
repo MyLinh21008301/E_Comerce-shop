@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { FaFacebook, FaInstagram, FaTwitter, FaLinkedin, FaShoppingCart, FaBell, FaQuestionCircle, FaSearch, FaCcVisa, FaCcMastercard, FaCcJcb, FaCcPaypal, FaGooglePay, FaApplePay, FaComments } from 'react-icons/fa';
 import { use, useEffect, useState } from 'react';
 import { mockConversations } from '@/data/mockData';
+import AuthStatus from '@/components/AuthStatus';
 
 export default function HomePage() {
   const { user, logout } = useAuth();
@@ -53,7 +54,7 @@ export default function HomePage() {
                 Hỗ Trợ
               </a>
               <a href="#" className="hover:text-blue-500">Tiếng Việt</a>
-              {user ? (
+              {/* {user ? (
                 <div className="flex items-center gap-3">
                   <span className="hover:text-blue-500">{user.fullName}</span>
                   <button 
@@ -69,7 +70,8 @@ export default function HomePage() {
                   <span>|</span>
                   <Link href="/login" className="hover:text-blue-500">Đăng Nhập</Link>
                 </div>
-              )}
+              )} */}
+              <AuthStatus/>
             </div>
           </div>
         </div>
