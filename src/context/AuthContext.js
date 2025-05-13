@@ -19,6 +19,27 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     keycloak.onAuthSuccess = () => {
       console.log('Authenticated');
+      const keycloakToken = keycloak.token;
+      console.log('Keycloak token:', keycloakToken); // Debug trạng thái
+      fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/me`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${keycloak.token}`,
+          'Content-Type': 'application/json'
+        }
+      }).then(response => {
+        if (!response.ok) {
+          throw new Error('fetch whoami failed');
+        }
+        return response.json();
+      }).then(userData => {
+        console.log('User data:', userData); // Debug trạng thái
+        setUser(userData);
+        localStorage.setItem("user", JSON.stringify(userData));
+      }).catch(error => {
+        console.error('Error fetching user data:', error);
+        setUser(null);
+      });
       setAuthState({
         isAuthenticated: true,
         user: keycloak.tokenParsed,
@@ -34,6 +55,8 @@ export function AuthProvider({ children }) {
         token: null,
         isLoading: false
       });
+      setUser(null);
+      localStorage.removeItem("user");
     };
     const initializeKeycloak = async () => {
       try {

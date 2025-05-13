@@ -34,19 +34,29 @@ export default function Inventory() {
   });
 
 
-  const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8080";
 
   
 
   useEffect(() => {
     const handleFetchProducts = async () => {
       // const accessToken = localStorage.getItem("accessToken");
-      if (user == accessToken){
+      if (!accessToken) {
+        console.error("Access token not found");
+        return;
+      }
+      if (!user ) {
+        console.error("User not found");
         return;
       }
 
+
+      const url = new URL("/api/products/vendors/" + user.userId, window.location.origin);
+      url.searchParams.append("page", 0);
+      url.searchParams.append("size", 1);
+      console.log("URL:", url.toString());
+
       try {
-        const response = await fetch(`/api/products/vendors/${user.userId}`, {
+        const response = await fetch(url, {
           method: "GET",
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -152,7 +162,6 @@ export default function Inventory() {
     formDataToSend.append("firstCategories", JSON.stringify(formData.firstCategories));
     formDataToSend.append("secondCategories", JSON.stringify(formData.secondCategories));
 
-    const accessToken = localStorage.getItem("accessToken");
 
     // Thêm danh sách ảnh
     images.forEach((image) => {
