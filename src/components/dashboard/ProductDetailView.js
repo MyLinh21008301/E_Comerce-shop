@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import EditProductModal from "../product/EditProductModal";
+import EditProductModal from "@/product/EditProductModal";
 import { useAuth } from "@/context/AuthContext";
 import { message } from "antd";
 
