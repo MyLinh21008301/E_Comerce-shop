@@ -1,12 +1,13 @@
-import { getProducts, getProduct } from '@/services/mock/products';
+
 import axios from 'axios';
+
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8080/product-service/api';
-export const productApi = {
-  // 1. Tạo sản phẩm mới (POST /api/products)
+
+const productApi = {
+
   createProduct: async (productData) => {
     try {
       const formData = new FormData();
-      // Thêm các trường vào FormData (dựa trên ProductCreateRequestDto)
       Object.keys(productData).forEach((key) => {
         formData.append(key, productData[key]);
       });
@@ -21,7 +22,6 @@ export const productApi = {
     }
   },
 
-  // 2. Lấy chi tiết sản phẩm theo ID (GET /api/products/{id})
   getProduct: async (id) => {
     try {
       const response = await axios.get(`${API_BASE_URL}/products/${id}`);
@@ -32,7 +32,7 @@ export const productApi = {
     }
   },
 
-  // 3. Cập nhật sản phẩm (PUT /api/products/{id})
+  // Cập nhật sản phẩm (PUT /api/products/{id})
   updateProduct: async (id, productData) => {
     try {
       const formData = new FormData();
@@ -50,7 +50,7 @@ export const productApi = {
     }
   },
 
-  // 4. Tăng số lượng tồn kho (PUT /api/products/{id}/increase-stock)
+  // Tăng số lượng tồn kho (PUT /api/products/{id}/increase-stock)
   increaseProductQuantity: async (id, quantity) => {
     try {
       const response = await axios.put(`${API_BASE_URL}/products/${id}/increase-stock`, { quantity });
@@ -61,7 +61,6 @@ export const productApi = {
     }
   },
 
-  // 5. Ẩn sản phẩm (PUT /api/products/{id}/hide)
   hideProduct: async (id) => {
     try {
       const response = await axios.put(`${API_BASE_URL}/products/${id}/hide`);
@@ -72,7 +71,6 @@ export const productApi = {
     }
   },
 
-  // 6. Hiện sản phẩm (PUT /api/products/{id}/show)
   showProduct: async (id) => {
     try {
       const response = await axios.put(`${API_BASE_URL}/products/${id}/show`);
@@ -83,7 +81,7 @@ export const productApi = {
     }
   },
 
-  // 7. Xóa sản phẩm (DELETE /api/products/{id})
+  //  Xóa sản phẩm (DELETE /api/products/{id})
   deleteProduct: async (id) => {
     try {
       const response = await axios.delete(`${API_BASE_URL}/products/${id}`);
@@ -94,7 +92,7 @@ export const productApi = {
     }
   },
 
-  // 8. Cập nhật đánh giá trung bình (PUT /api/products/{id}/update-avg-rating)
+  //(PUT /api/products/{id}/update-avg-rating)
   updateAvgRating: async (id, avgRating) => {
     try {
       const response = await axios.put(`${API_BASE_URL}/products/${id}/update-avg-rating`, { avgRating });
@@ -105,7 +103,7 @@ export const productApi = {
     }
   },
 
-  // 9. Tìm kiếm sản phẩm (GET /api/products/search)
+
   searchProducts: async ({
     productName = '',
     minPrice,
@@ -136,7 +134,7 @@ export const productApi = {
     }
   },
 
-  // 10. Lấy sản phẩm theo vendorId (GET /api/products/vendors/{vendorId})
+  // Lấy sản phẩm theo vendorId (GET /api/products/vendors/{vendorId})
   getProductsByVendorId: async (vendorId, productName = '', page = 0, size = 10) => {
     try {
       const response = await axios.get(`${API_BASE_URL}/products/vendors/${vendorId}`, {
@@ -148,4 +146,6 @@ export const productApi = {
       throw error;
     }
   },
-}; 
+};
+
+export default productApi; 

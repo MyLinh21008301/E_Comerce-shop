@@ -1,113 +1,236 @@
-"use client";
+// // "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+// // import { useState } from "react";
+// // import { useRouter, useSearchParams } from "next/navigation";
+// // import { useAuth } from "@/context/AuthContext";
+
+// // export default function LoginPage() {
+// //   const [username, setUsername] = useState("");
+// //   const [password, setPassword] = useState("");
+// //   const [error, setError] = useState("");
+// //   const [loading, setLoading] = useState(false);
+// //   const router = useRouter();
+// //   const searchParams = useSearchParams();
+// //   const successMessage = searchParams.get("success");
+// //   const { login, kcLogin, authState } = useAuth();
+
+// //   const handleLogin = async (e) => {
+// //     e.preventDefault();
+// //     setError("");
+// //     setLoading(true);
+
+// //     if (!username || !password) {
+// //       setError("Vui lòng nhập tên đăng nhập và mật khẩu");
+// //       setLoading(false);
+// //       return;
+// //     }
+
+// //     try {
+// //       const userData = await login(username, password);
+// //       if (userData.isVendor) {
+// //         router.push("/dashboard");
+// //       } else {
+// //         router.push("/home");
+// //       }
+// //     } catch (error) {
+// //       console.error("Lỗi đăng nhập:", error);
+// //       setError(error.message || "Đã xảy ra lỗi khi đăng nhập. Vui lòng thử lại.");
+// //     } finally {
+// //       setLoading(false);
+// //     }
+// //   };
+
+// //   const handleSSOLogin = () => {
+// //     kcLogin(); // Chuyển hướng đến Keycloak login page
+// //   };
+
+// //   return (
+// //     <div className="flex items-center justify-center h-screen bg-gray-100">
+// //       <div className="w-full max-w-md bg-white rounded-lg shadow-lg p-8">
+// //         <h1 className="text-2xl font-bold text-center text-gray-800 mb-6">Đăng Nhập</h1>
+// //         <form onSubmit={handleLogin}>
+// //           {successMessage && (
+// //             <p className="text-green-500 mb-4 text-center">{successMessage}</p>
+// //           )}
+// //           {error && (
+// //             <p className="text-red-500 mb-4 text-center">{error}</p>
+// //           )}
+// //           <div className="mb-4">
+// //             <label
+// //               htmlFor="username"
+// //               className="block text-sm font-medium text-gray-700"
+// //             >
+// //               Tên đăng nhập
+// //             </label>
+// //             <input
+// //               id="username"
+// //               type="text"
+// //               placeholder="Nhập tên đăng nhập"
+// //               className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+// //               value={username}
+// //               onChange={(e) => setUsername(e.target.value)}
+// //               required
+// //               disabled={loading}
+// //             />
+// //           </div>
+// //           <div className="mb-4">
+// //             <label
+// //               htmlFor="password"
+// //               className="block text-sm font-medium text-gray-700"
+// //             >
+// //               Mật khẩu
+// //             </label>
+// //             <input
+// //               id="password"
+// //               type="password"
+// //               placeholder="Nhập mật khẩu"
+// //               className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+// //               value={password}
+// //               onChange={(e) => setPassword(e.target.value)}
+// //               required
+// //               disabled={loading}
+// //             />
+// //           </div>
+// //           <div className="flex items-center justify-between mb-4">
+// //             <a href="#" className="text-sm text-blue-600 hover:underline">
+// //               Quên mật khẩu?
+// //             </a>
+// //           </div>
+// //           <div className="flex gap-4">
+// //             <button
+// //               type="button"
+// //               onClick={() => router.push("/register")}
+// //               className="w-full py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50"
+// //               disabled={loading}
+// //             >
+// //               Đăng ký
+// //             </button>
+// //             <button
+// //               type="submit"
+// //               className="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50"
+// //               disabled={loading}
+// //             >
+// //               {loading ? "Đang đăng nhập..." : "Đăng nhập"}
+// //             </button>
+// //           </div>
+// //           <div className="mt-4">
+// //             <button
+// //               type="button"
+// //               onClick={handleSSOLogin}
+// //               className="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 disabled:opacity-50"
+// //               disabled={loading}
+// //             >
+// //               Đăng nhập với Keycloak
+// //             </button>
+// //           </div>
+// //         </form>
+// //       </div>
+// //     </div>
+// //   );
+// // }
+
+
+
+'use client';
+
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import userApi from '@/services/api/user';
 import { useAuth } from '@/context/AuthContext';
+import Link from 'next/link';
 
-
-const defaultToken = "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJKcGNvM1ZIeFJTMVhrSm1mcVN3WXp4NHZLenFPUUhoTUlmaXJoRFYtVUZVIn0.eyJleHAiOjE3NDcwNjg0OTIsImlhdCI6MTc0NzAzMjQ5MiwianRpIjoib25ydGFjOjQyMjY2OGI5LWM4ZjgtNDkzMS05N2NlLTI0NTQ0NGVhMmJkMiIsImlzcyI6Imh0dHA6Ly81ZWFjLTEyNS0yMzUtMjM5LTE5Ni5uZ3Jvay1mcmVlLmFwcC9yZWFsbXMvZGVtbyIsInR5cCI6IkJlYXJlciIsImF6cCI6ImZyb250ZW5kLWNsaWVudCIsInNpZCI6IjQzMzk0NzQ3LWVlMWYtNDRjOC04OTJkLTg5MmI4NjkxYmQ0YiIsInNjb3BlIjoib3BlbmlkIHJvbGVzIHBob25lIiwicm9sZXMiOlsib2ZmbGluZV9hY2Nlc3MiLCJkZWZhdWx0LXJvbGVzLWRlbW8iLCJ1bWFfYXV0aG9yaXphdGlvbiIsIlVTRVIiXSwibGFzdF9uYW1lIjoiUGhhbSIsInBob25lX251bWJlciI6IjA5NDQ3MTMwMTUiLCJmaXJzdF9uYW1lIjoiTWFuaCIsImVtYWlsIjoicG1hbmhoMTlAZ21haS5mY2QiLCJ1c2VybmFtZSI6InRlc3RlcjEifQ.Qeyh0cSWzZK8aOpiMx7vtjkORqknH8vkTfMP_WKI1-8px2zIMgDlBa54ONFWDEUTdDqDu7viX7EZrDHRq6A14nwcxHbD6rtuvAOpxO1zR-NCGOQqP1c_36o2N7CtVaJpSkXHos7I29qQnF_aWsOEmtrTF6ipks0jqUHVU5lKaB6z8nWc7SF6AhHWr7wsFLHLhsXi11LWtBU28Qp5VfB50x1j4uMe0o1F06OkvUyLXtwdo_jPbHj9UJ57Ef6OirY1Njt0Wd0VLx7PV54-eHClvdVU8vKc75yRrU0AJ6rYynfpnnhtsG4zk1Z44fplshgW5flrrH75aOFGeKM7-C6nHQ";
-
-
-export default function Login() {
-
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+export default function LoginPage() {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const { login } = useAuth();
-  const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8080";
+  const { setUser } = useAuth();
 
-  useEffect(() =>{
-    localStorage.setItem("accessToken", defaultToken);
-  },[]);
-
-  const handleSubmit = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    setError("");
+    setError('');
+    setLoading(true);
 
-    // Giả lập kiểm tra đăng nhập
-    if (username === "admin" && password === "123") {
-      // Đăng nhập thành công
+    try {
+      const { access_token } = await userApi.login({ username, password });
+      const decodedToken = jwtDecode(access_token);
+      const roles = decodedToken.realm_access?.roles || [];
 
+      const user = {
+        username,
+        isCustomer: roles.includes('CUSTOMER'),
+        isVendor: roles.includes('VENDOR'),
+        isUser: roles.includes('USER'),
+      };
 
+      localStorage.setItem('token', access_token);
+      localStorage.setItem('user', JSON.stringify(user));
+      setUser(user);
 
-      fetch(`${backendUrl}/api/users/me`, {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${defaultToken}`,
-          'Content-Type': 'application/json'
-        }
-      }).then((response) => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          throw new Error('Failed to fetch user data');
-        }
-      })
-      .then((data) => {
-        login(data);
-        router.push('/home');
+      router.push('/home');
+    } catch (error) {
+      console.error('Lỗi đăng nhập:', error);
+      let errorMessage = 'Đã xảy ra lỗi khi đăng nhập.';
+      if (error.code === 'ERR_NETWORK') {
+        errorMessage = 'Lỗi mạng hoặc CORS. Vui lòng kiểm tra kết nối Keycloak.';
+      } else if (error.response?.status === 401) {
+        errorMessage = 'Username hoặc password không đúng.';
+      } else if (error.response?.data?.error_description) {
+        errorMessage = error.response.data.error_description;
       }
-      ).catch((error) => {
-        console.error('Error:', error);
-        setError("Đã xảy ra lỗi khi tải thông tin người dùng");
-      });
-      // const 
-      // router.push('/home');
-    } else {
-      setError("Tên đăng nhập hoặc mật khẩu không chính xác");
+      setError(errorMessage);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="flex items-center justify-center h-screen bg-gray-100">
       <div className="w-full max-w-md bg-white rounded-lg shadow-lg p-8">
-        <h1 className="text-2xl font-bold text-center text-gray-800 mb-6">Đăng Nhập</h1>
-        <form onSubmit={handleSubmit}>
-          {error && <p className="text-red-500 mb-4">{error}</p>}
+        <h1 className="text-2xl font-bold text-center mb-6">Đăng Nhập</h1>
+        {error && <p className="text-red-500 text-center mb-4">{error}</p>}
+        <form onSubmit={handleLogin}>
           <div className="mb-4">
-            <label htmlFor="username" className="block text-sm font-medium text-gray-700">Tên đăng nhập</label>
+            <label htmlFor="username" className="block text-sm font-medium text-gray-700">
+              Username
+            </label>
             <input
-              id="username"
               type="text"
-              placeholder="Nhập tên đăng nhập"
-              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              id="username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
+              className="mt-1 w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             />
           </div>
           <div className="mb-4">
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700">Mật khẩu</label>
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+              Mật khẩu
+            </label>
             <input
-              id="password"
               type="password"
-              placeholder="Nhập mật khẩu"
-              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              className="mt-1 w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             />
           </div>
-          <div className="flex items-center justify-between mb-4">
-            <a href="#" className="text-sm text-blue-600 hover:underline">Quên mật khẩu?</a>
-          </div>
-          <div className="flex gap-4">
-            <button
-              type="button"
-              onClick={() => router.push('/register')}
-              className="w-full py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
-            >
-              Đăng ký
-            </button>
-            <button
-              type="submit"
-              className="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700"
-            >
-              Đăng nhập
-            </button>
-          </div>
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 disabled:bg-gray-400"
+          >
+            {loading ? 'Đang đăng nhập...' : 'Đăng Nhập'}
+          </button>
         </form>
+        <p className="text-center mt-4">
+          Chưa có tài khoản?{' '}
+          <Link href="/register" className="text-blue-500 hover:underline">
+            Đăng ký
+          </Link>
+        </p>
       </div>
     </div>
   );

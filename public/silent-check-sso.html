@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html>
 <head>
   <title>Silent Check SSO</title>
@@ -19,4 +19,70 @@
 <body>
   <p>Silent authentication in progress...</p>
 </body>
+</html> -->
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Silent Check SSO</title>
+  <script src="https://cdn.jsdelivr.net/npm/keycloak-js@26.0.0/dist/keycloak.min.js"></script>
+</head>
+<body>
+  <p>Silent authentication in progress...</p>
+  <script>
+    const keycloak = Keycloak({
+      url: 'https://hart-cove-heights-bride.trycloudflare.com',
+      realm: 'demo',
+      clientId: 'frontend-client'
+    });
+
+    keycloak.init({ onLoad: 'check-sso', silentCheckSsoRedirectUri: window.location.href })
+      .then((authenticated) => {
+        if (authenticated) {
+          window.parent.postMessage(location.href, window.location.origin);
+        } else {
+          window.parent.postMessage('SSO_NOT_AUTHENTICATED', window.location.origin);
+        }
+      })
+      .catch((error) => {
+        console.error('Silent SSO error:', error);
+        window.parent.postMessage('SSO_ERROR', window.location.origin);
+      });
+  </script>
+</body>
 </html>
+
+<!-- <!DOCTYPE html>
+<html>
+<head>
+  <title>Silent Check SSO</title>
+  <script src="https://cdn.jsdelivr.net/npm/keycloak-js@26.0.0/dist/keycloak.min.js"></script>
+</head>
+<body>
+  <p>Silent authentication in progress...</p>
+  <script>
+    const keycloak = Keycloak({
+      url: 'http://hart-cove-heights-bride.trycloudflare.com',
+      realm: 'demo',
+      clientId: 'frontend-client'
+    });
+
+    keycloak.init({ onLoad: 'check-sso', silentCheckSsoRedirectUri: window.location.href })
+      .then((authenticated) => {
+        if (authenticated) {
+          // Gửi location.href khi SSO thành công
+          window.parent.postMessage(location.href, window.location.origin);
+        } else {
+          // Gửi lỗi nếu không đăng nhập
+          window.parent.postMessage('SSO_NOT_AUTHENTICATED', window.location.origin);
+        }
+      })
+      .catch((error) => {
+        console.error('Silent SSO error:', error);
+        window.parent.postMessage('SSO_ERROR', window.location.origin);
+      });
+  </script>
+</body>
+</html> -->
